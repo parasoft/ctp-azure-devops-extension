@@ -1,0 +1,89 @@
+{
+    "manifestVersion": 1,
+    "id": "parasoft-ctp-vsts-extension",
+    "name": "Parasoft CTP",
+    "version": "0.1.0",
+    "publisher": "parasoft",
+    "targets": [
+        {
+            "id": "Microsoft.VisualStudio.Services"
+        }
+    ],    
+    "description": "Deploy and destroy service virtualization environments with Parasoft Continuous Testing Platform (CTP)",
+    "categories": [
+        "Build and release"
+    ],
+    "icons": {
+        "default": "extension-icon.png"
+    },
+    "files": [
+        {
+            "path": "DeployTask"
+        },
+        {
+            "path": "DestroyTask"
+        }
+    ],
+    "contributions": [
+        {
+            "id": "parasoft-ctp-endpoint-type",
+            "description": "Service Endpoint type for Parasoft Continuous Testing Platform (CTP)",
+            "type": "ms.vss-endpoint.service-endpoint-type",
+            "targets": [ "ms.vss-endpoint.endpoint-types" ],
+            "properties": {
+                "name": "parasoftctp",
+                "displayName": "Parasoft CTP",
+                "authenticationSchemes": [
+                    {
+                        "type": "ms.vss-endpoint.endpoint-auth-scheme-basic",
+                        "inputDescriptors": [
+                            {
+                                "id": "username",
+                                "name": "Username",
+                                "description": "Parasoft CTP username",
+                                "inputMode": "textbox",
+                                "isConfidential": false,
+                                "validation": {
+                                    "isRequired": false,
+                                    "dataType": "string"
+                                }
+                            },
+                            {
+                                "id": "password",
+                                "name": "Password",
+                                "description": "Parasoft CTP password",
+                                "inputMode": "textarea",
+                                "isConfidential": true,
+                                "validation": {
+                                    "isRequired": false,
+                                    "dataType": "string"
+                                }
+                            }
+                        ]
+                    }
+                ],
+                "helpMarkDown": "Learn More"
+            }
+        },
+        {
+            "id": "parasoft-ctp-deploy-task",
+            "type": "ms.vss-distributed-task.task",
+            "targets": [
+                "ms.vss-distributed-task.tasks"
+            ],
+            "properties": {
+                "name": "DeployTask"
+            }
+        },
+        {
+            "id": "parasoft-ctp-destroy-task",
+            "type": "ms.vss-distributed-task.task",
+            "targets": [
+                "ms.vss-distributed-task.tasks"
+            ],
+            "properties": {
+                "name": "DestroyTask"
+            }
+        }
+    ]
+}
