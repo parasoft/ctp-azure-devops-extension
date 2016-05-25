@@ -1,9 +1,10 @@
 {
     "manifestVersion": 1,
-    "id": "parasoft-ctp-vsts-extension",
+    "id": "ctp-vsts-extension",
     "name": "Parasoft CTP",
-    "version": "0.1.0",
+    "version": "0.5.0",
     "publisher": "parasoft",
+    "scopes": [ "vso.build_execute", "vso.serviceendpoint_manage" ],
     "targets": [
         {
             "id": "Microsoft.VisualStudio.Services"
@@ -26,7 +27,7 @@
     ],
     "contributions": [
         {
-            "id": "parasoft-ctp-endpoint-type",
+            "id": "ctp-endpoint-type",
             "description": "Service Endpoint type for Parasoft Continuous Testing Platform (CTP)",
             "type": "ms.vss-endpoint.service-endpoint-type",
             "targets": [ "ms.vss-endpoint.endpoint-types" ],
@@ -52,7 +53,7 @@
                                 "id": "password",
                                 "name": "Password",
                                 "description": "Parasoft CTP password",
-                                "inputMode": "textarea",
+                                "inputMode": "textbox",
                                 "isConfidential": true,
                                 "validation": {
                                     "isRequired": false,
@@ -62,11 +63,11 @@
                         ]
                     }
                 ],
-                "helpMarkDown": "Learn More"
+                "helpMarkDown": "This service endpoint will be available to Parasoft deploy and destroy tasks in the build and release pipeline."
             }
         },
         {
-            "id": "parasoft-ctp-deploy-task",
+            "id": "deploy-task",
             "type": "ms.vss-distributed-task.task",
             "targets": [
                 "ms.vss-distributed-task.tasks"
@@ -76,7 +77,7 @@
             }
         },
         {
-            "id": "parasoft-ctp-destroy-task",
+            "id": "destroy-task",
             "type": "ms.vss-distributed-task.task",
             "targets": [
                 "ms.vss-distributed-task.tasks"
