@@ -25,6 +25,11 @@
             "path": "DestroyTask"
         }
     ],
+    "screenshots": [
+        {
+            "path": "Screenshots/deploy-and-destroy-tasks.png"
+        }
+    ],
     "contributions": [
         {
             "id": "ctp-endpoint-type",
