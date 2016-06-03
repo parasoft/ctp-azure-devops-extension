@@ -1,16 +1,16 @@
 {
     "manifestVersion": 1,
     "id": "ctp-vsts-extension",
-    "name": "Parasoft CTP",
-    "version": "0.5.0",
+    "name": "Parasoft Service Virtualization",
+    "version": "0.5.1",
     "publisher": "parasoft",
     "scopes": [ "vso.build_execute", "vso.serviceendpoint_manage" ],
     "targets": [
         {
             "id": "Microsoft.VisualStudio.Services"
         }
-    ],    
-    "description": "Deploy and destroy service virtualization environments with Parasoft Continuous Testing Platform (CTP)",
+    ],
+    "description": "Create and manage simulated test environments with Parasoft Service Virtualization.  Access complete test environments anytime, anywhere in order to test earlier, faster, and more completely.",
     "categories": [
         "Build and release"
     ],
@@ -30,6 +30,16 @@
             "path": "Screenshots/deploy-and-destroy-tasks.png"
         }
     ],
+    "branding": {
+        "color": "#004877",
+        "theme": "dark"
+    },
+    "content": {
+        "details":
+        {
+            "path": "extension-details.md"
+        }
+    },
     "contributions": [
         {
             "id": "ctp-endpoint-type",

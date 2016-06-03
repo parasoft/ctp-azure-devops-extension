@@ -1,8 +1,8 @@
 {
   "id": "5b42da30-2135-11e6-8ef3-518445c1557a",
   "name": "DeployTask",
-  "friendlyName": "Parasoft CTP Deploy Environment",
-  "description": "Deploy a Parasoft Continuous Testing Platform (CTP) environment",
+  "friendlyName": "Parasoft Service Virtualization Deploy",
+  "description": "Deploy a Parasoft Service Virtualization environment",
   "author": "Parasoft Corporation",
   "helpMarkDown": "Replace with markdown to show in help",
   "category": "Deploy",
@@ -14,7 +14,7 @@
   "version": {
     "Major": "0",
     "Minor": "5",
-    "Patch": "0"
+    "Patch": "1"
   },
   "minimumAgentVersion": "1.83.0",
   "instanceNameFormat": "Deploy $(Environment) to $(Instance)",

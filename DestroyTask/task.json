@@ -1,8 +1,8 @@
 {
   "id": "7cb5ab10-2136-11e6-8ca9-edb37aeccddb",
   "name": "DestroyTask",
-  "friendlyName": "Parasoft CTP Destroy Environment",
-  "description": "Destroy a Parasoft Continuous Testing Platform (CTP) environment",
+  "friendlyName": "Parasoft Service Virtualization Destroy",
+  "description": "Destroy a Parasoft Service Virtualization environment",
   "author": "Parasoft Corporation",
   "helpMarkDown": "Replace with markdown to show in help",
   "category": "Deploy",
@@ -14,7 +14,7 @@
   "version": {
     "Major": "0",
     "Minor": "5",
-    "Patch": "0"
+    "Patch": "1"
   },
   "minimumAgentVersion": "1.83.0",
   "instanceNameFormat": "Parasoft Destroy Environment: $(Environment)",
