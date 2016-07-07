@@ -9,7 +9,8 @@ import tl = require('vsts-task-lib/task');
 
 // Get Environment Manager configuration
 
-var emBaseURL = url.parse(tl.getEndpointUrl('ParasoftEMEndpoint', true));
+var emEndpoint = tl.getInput('ParasoftEMEndpoint', true);
+var emBaseURL = url.parse(tl.getEndpointUrl(emEndpoint, true));
 
 var getFromEM = function(path: string) {
     var def = q.defer();
