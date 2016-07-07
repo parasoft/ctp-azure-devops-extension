@@ -12,5 +12,5 @@ The extension adds the following build tasks to Visual Studio Team Services:
 * Parasoft Service Virtualization Destroy
   Remove a service virtualization environment and clean up all related artifacts.  This step is useful in conjunction with the copy environment option in the deploy step.
   
-## Documentaiton
+## Documentation
 You can find detailed documentation on how to create service virtualization environments by installing the Parasoft Service Virtualization artifact in Azure and opening a browser to the host name / ip address to see the online user guide.
