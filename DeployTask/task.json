@@ -14,7 +14,7 @@
   "version": {
     "Major": "0",
     "Minor": "5",
-    "Patch": "1"
+    "Patch": "2"
   },
   "minimumAgentVersion": "1.83.0",
   "instanceNameFormat": "Deploy $(Environment) to $(Instance)",
