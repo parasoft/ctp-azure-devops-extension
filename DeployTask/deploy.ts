@@ -11,6 +11,12 @@ import tl = require('vsts-task-lib/task');
 
 var emEndpoint = tl.getInput('ParasoftEMEndpoint', true);
 var emBaseURL = url.parse(tl.getEndpointUrl(emEndpoint, true));
+if (emBaseURL.path === '/') {
+    emBaseURL.path = '/em';
+} else if (emBaseURL.path === '/em/') {
+    emBaseURL.path = '/em';
+}
+var emAuthorization = tl.getEndpointAuthorization(emEndpoint, true);
 
 var getFromEM = function(path: string) {
     var def = q.defer();
@@ -18,10 +24,18 @@ var getFromEM = function(path: string) {
         host: emBaseURL.hostname,
         port: emBaseURL.port,
         path: emBaseURL.path + path,
+        auth: undefined,
         headers: {
             'Accept': 'application/json'
         }
     }
+    if (emAuthorization && emAuthorization.parameters['username']) {
+        options.auth = {
+            user: emAuthorization.parameters['username'],
+            pass: emAuthorization.parameters['password']
+        };
+    }
+    console.log('GET http://' + options.host + ':' + options.port + options.path);
     var responseString = "";
     http.get(options, (res) => {
         res.setEncoding('utf8');
@@ -29,6 +43,7 @@ var getFromEM = function(path: string) {
             responseString += chunk;
         });
         res.on('end', () => {
+            console.log('    response ' + res.statusCode + ':  ' + responseString);
             var responseObject = JSON.parse(responseString);
             def.resolve(responseObject);
         });
@@ -44,17 +59,26 @@ var findInEM = function(path: string, property: string, name: string) {
         host: emBaseURL.hostname,
         port: emBaseURL.port,
         path: emBaseURL.path + path,
+        auth: undefined,
         headers: {
             'Accept': 'application/json'
         }
     }
+    if (emAuthorization && emAuthorization.parameters['username']) {
+        options.auth = {
+            user: emAuthorization.parameters['username'],
+            pass: emAuthorization.parameters['password']
+        };
+    }
     var responseString = "";
+    console.log('GET http://' + options.host + ':' + options.port + options.path);
     http.get(options, (res) => {
         res.setEncoding('utf8');
         res.on('data', (chunk) => {
             responseString += chunk;
         });
         res.on('end', () => {
+            console.log('    response ' + res.statusCode + ':  ' + responseString);
             var responseObject = JSON.parse(responseString);
             if (typeof responseObject[property] === 'undefined') {
                 def.reject(property + ' does not exist in response object from ' + path);
@@ -82,11 +106,19 @@ var postToEM = function(path: string, data: any) {
         port: parseInt(emBaseURL.port),
         path: emBaseURL.path + path,
         method: 'POST',
+        auth: undefined,
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         }
     }
+    if (emAuthorization && emAuthorization.parameters['username']) {
+        options.auth = {
+            user: emAuthorization.parameters['username'],
+            pass: emAuthorization.parameters['password']
+        };
+    }
+    console.log('POST http://' + options.host + ':' + options.port + options.path);
     var responseString = "";
     var req = http.request(options, (res) => {
         res.setEncoding('utf8');
@@ -94,6 +126,7 @@ var postToEM = function(path: string, data: any) {
             responseString += chunk;
         });
         res.on('end', () => {
+            console.log('    response ' + res.statusCode + ':  ' + responseString);
             var responseObject = JSON.parse(responseString);
             def.resolve(responseObject);
         });
