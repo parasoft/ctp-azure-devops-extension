@@ -1,5 +1,11 @@
 #Parasoft Service Virtualization
-This extension contains build tasks for deploying and destroying virtual environments.
+Service Virtualization provides a complete test environment for complex, distributed systems.  From the perspective of the application under test (AUT), it simulates the behavior of dependent components it provides an “always-on” test environment allowing DevTest teams to test earlier, faster and more completely.  It is often used when "dependent components" connected to the AUT (e.g., APIs, 3rd-party services, databases, applications, and other endpoints), but not readily available for development and test.
+
+##About the Parasoft Service Virtualization Extension
+This extension contains a build task for deploying a complete, simulated test environment and another task for destroying the environment.   There is no need to share test environments or resources across teams or test phases; the exact environment you need is instantly spun up whenever you want it, then destroyed as soon as you’re done with it.  Both deploy and destroy tasks can be integrated at any point in the Microsoft VSTS pipeline
+
+##Getting Started and Resources
+For videos, getting started guides and other resources for service virtualization for Microsoft, please see our dedicated [Microsoft Service Virtualization Resource Center](https://www.parasoft.com/microsoft/).
 
 ## Prerequisites
 Parasoft Service Virtualization artifacts must be provisioned in Azure Resource Manager in order to use the Visual Studio tasks.
