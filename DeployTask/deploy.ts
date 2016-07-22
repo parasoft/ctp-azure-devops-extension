@@ -30,10 +30,7 @@ var getFromEM = function(path: string) {
         }
     }
     if (emAuthorization && emAuthorization.parameters['username']) {
-        options.auth = {
-            user: emAuthorization.parameters['username'],
-            pass: emAuthorization.parameters['password']
-        };
+        options.auth = emAuthorization.parameters['username'] + ':' +  emAuthorization.parameters['password'];
     }
     console.log('GET http://' + options.host + ':' + options.port + options.path);
     var responseString = "";
@@ -65,10 +62,7 @@ var findInEM = function(path: string, property: string, name: string) {
         }
     }
     if (emAuthorization && emAuthorization.parameters['username']) {
-        options.auth = {
-            user: emAuthorization.parameters['username'],
-            pass: emAuthorization.parameters['password']
-        };
+        options.auth = emAuthorization.parameters['username'] + ':' +  emAuthorization.parameters['password'];
     }
     var responseString = "";
     console.log('GET http://' + options.host + ':' + options.port + options.path);
@@ -113,10 +107,7 @@ var postToEM = function(path: string, data: any) {
         }
     }
     if (emAuthorization && emAuthorization.parameters['username']) {
-        options.auth = {
-            user: emAuthorization.parameters['username'],
-            pass: emAuthorization.parameters['password']
-        };
+        options.auth = emAuthorization.parameters['username'] + ':' +  emAuthorization.parameters['password'];
     }
     console.log('POST http://' + options.host + ':' + options.port + options.path);
     var responseString = "";
