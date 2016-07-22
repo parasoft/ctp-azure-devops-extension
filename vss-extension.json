@@ -2,7 +2,7 @@
     "manifestVersion": 1,
     "id": "ctp-vsts-extension",
     "name": "Parasoft Service Virtualization",
-    "version": "0.5.5",
+    "version": "0.5.6",
     "publisher": "parasoft",
     "scopes": [ "vso.build_execute", "vso.serviceendpoint_manage" ],
     "targets": [
@@ -13,6 +13,15 @@
     "description": "Create and manage simulated test environments with Parasoft Service Virtualization.  Access complete test environments anytime, anywhere in order to test earlier, faster, and more completely.",
     "categories": [
         "Build and release"
+    ],
+    "tags": [
+        "Service Virtualization",
+        "Stubs",
+        "Microsoft service virtualization",
+        "test",
+        "build task",
+        "release",
+        "test environments"
     ],
     "icons": {
         "default": "extension-icon.png"
