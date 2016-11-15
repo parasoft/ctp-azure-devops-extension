@@ -12,12 +12,12 @@
   ],
   "demands": [],
   "version": {
-    "Major": "0",
-    "Minor": "5",
-    "Patch": "6"
+    "Major": "1",
+    "Minor": "0",
+    "Patch": "1"
   },
-  "minimumAgentVersion": "1.83.0",
-  "instanceNameFormat": "Parasoft Destroy Environment: $(Environment)",
+  "minimumAgentVersion": "1.103.0",
+  "instanceNameFormat": "Destroy Environment: $(Environment)",
   "inputs": [
     {
       "name": "ParasoftEMEndpoint",
@@ -25,7 +25,7 @@
       "label": "Parasoft CTP Endpoint",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Parasoft Environment Manager remote service endpoint"
+      "helpMarkDown": "Parasoft Continuous Testing Platform remote service endpoint"
     },
     {
       "name": "System",

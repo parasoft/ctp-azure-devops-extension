@@ -1,6 +1,6 @@
 {
   "name": "ctp-vsts-destroy",
-  "version": "0.1.0",
+  "version": "1.0.1",
   "description": "Destroy service virtualization environments with Parasoft Continuous Testing Platform (CTP)",
   "main": "destroy.js",
   "scripts": {
@@ -23,6 +23,6 @@
   "homepage": "https://github.com/parasoft/ctp-vsts-extension#readme",
   "devDependencies": {
     "q": "^1.4.1",
-    "vsts-task-lib": "^0.8.2"
+    "vsts-task-lib": "^0.9.6"
   }
 }
