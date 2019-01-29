@@ -3,6 +3,7 @@
 /// <reference path="../typings/vsts-task-lib.d.ts" />
 
 import http = require('http');
+import https = require('https');
 import q = require('q');
 import url = require('url');
 import tl = require('vsts-task-lib/task');
@@ -16,6 +17,8 @@ if (emBaseURL.path === '/') {
 } else if (emBaseURL.path === '/em/') {
     emBaseURL.path = '/em';
 }
+var protocol : any = emBaseURL.protocol === 'https:' ? https : http;
+var protocolLabel = emBaseURL.protocol || 'http:';
 var emAuthorization = tl.getEndpointAuthorization(emEndpoint, true);
 
 var getFromEM = function(path: string) {
@@ -29,12 +32,16 @@ var getFromEM = function(path: string) {
             'Accept': 'application/json'
         }
     }
+    if (protocolLabel === 'https:') {
+        options['rejectUnauthorized'] = false;
+        options['agent'] = false;
+    }
     if (emAuthorization && emAuthorization.parameters['username']) {
         options.auth = emAuthorization.parameters['username'] + ':' +  emAuthorization.parameters['password'];
     }
-    console.log('GET http://' + options.host + ':' + options.port + options.path);
+    console.log('GET ' + protocolLabel + '//' + options.host + ':' + options.port + options.path);
     var responseString = "";
-    http.get(options, (res) => {
+    protocol.get(options, (res) => {
         res.setEncoding('utf8');
         res.on('data', (chunk) => {
             responseString += chunk;
@@ -61,12 +68,16 @@ var findInEM = function(path: string, property: string, name: string) {
             'Accept': 'application/json'
         }
     }
+    if (protocolLabel === 'https:') {
+        options['rejectUnauthorized'] = false;
+        options['agent'] = false;
+    }
     if (emAuthorization && emAuthorization.parameters['username']) {
         options.auth = emAuthorization.parameters['username'] + ':' +  emAuthorization.parameters['password'];
     }
     var responseString = "";
-    console.log('GET http://' + options.host + ':' + options.port + options.path);
-    http.get(options, (res) => {
+    console.log('GET ' + protocolLabel + '//' + options.host + ':' + options.port + options.path);
+    protocol.get(options, (res) => {
         res.setEncoding('utf8');
         res.on('data', (chunk) => {
             responseString += chunk;
@@ -106,12 +117,16 @@ var postToEM = function(path: string, data: any) {
             'Content-Type': 'application/json'
         }
     }
+    if (protocolLabel === 'https:') {
+        options['rejectUnauthorized'] = false;
+        options['agent'] = false;
+    }
     if (emAuthorization && emAuthorization.parameters['username']) {
         options.auth = emAuthorization.parameters['username'] + ':' +  emAuthorization.parameters['password'];
     }
-    console.log('POST http://' + options.host + ':' + options.port + options.path);
+    console.log('POST ' + protocolLabel + '//' + options.host + ':' + options.port + options.path);
     var responseString = "";
-    var req = http.request(options, (res) => {
+    var req = protocol.request(options, (res) => {
         res.setEncoding('utf8');
         res.on('data', (chunk) => {
             responseString += chunk;
