@@ -1,6 +1,6 @@
 {
   "name": "ctp-vsts-deploy",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "description": "Deploy service virtualization environments with Parasoft Continuous Testing Platform (CTP)",
   "main": "deploy.js",
   "scripts": {
