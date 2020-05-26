@@ -2,7 +2,7 @@
     "manifestVersion": 1,
     "id": "ctp-vsts-extension",
     "name": "Parasoft Service Virtualization",
-    "version": "1.1.4",
+    "version": "1.1.5",
     "publisher": "parasoft",
     "public": true,
     "scopes": [ "vso.build_execute", "vso.serviceendpoint_manage" ],

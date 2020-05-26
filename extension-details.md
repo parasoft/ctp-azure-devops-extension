@@ -5,7 +5,7 @@ Service Virtualization provides a complete test environment for complex, distrib
 This extension contains a build task for deploying a complete, simulated test environment and another task for destroying the environment.   There is no need to share test environments or resources across teams or test phases; the exact environment you need is instantly spun up whenever you want it, then destroyed as soon as you’re done with it.  Both deploy and destroy tasks can be integrated at any point in the Microsoft VSTS pipeline
 
 ##Getting Started and Resources
-For videos, getting started guides and other resources for service virtualization for Microsoft, please see our dedicated [Microsoft Service Virtualization Resource Center](https://software.parasoft.com/microsoft-service-virtualization/).
+For getting started guides and other resources for service virtualization for Microsoft, please see [Deploying Virtualize to Cloud-based Microsoft Environments](https://docs.parasoft.com/display/GUIDES/Deploying+Virtualize+to+Cloud-based+Microsoft+Environments).
 
 ## Prerequisites
 Parasoft Service Virtualization artifacts must be provisioned in Azure Resource Manager in order to use the Visual Studio tasks.
