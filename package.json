@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "compile": "tsc --project DeployTask/tsconfig.json && tsc --project DestroyTask/tsconfig.json",
+    "initdev": "npm install && npm run initdev:npm:tasks",
+    "initdev:npm:tasks": "glob-exec --parallel --foreach \"*/tsconfig.json\" -- \"cd {{file.dir}} && npm install\"",
+    "compile": "npm run initdev && tsc --project DeployTask/tsconfig.json && tsc --project DestroyTask/tsconfig.json",
     "package": "npx tfx extension create --manifests azure-devops-extension.json",
     "build": "npm run compile && npm run package"
   },
@@ -24,5 +26,8 @@
   "bugs": {
     "url": "https://github.com/parasoft/ctp-azure-devops-extension/issues"
   },
-  "homepage": "https://github.com/parasoft/ctp-azure-devops-extension#readme"
+  "homepage": "https://github.com/parasoft/ctp-azure-devops-extension#readme",
+  "dependencies": {
+    "glob-exec": "^0.1.1"
+  }
 }
