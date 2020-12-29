@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/parasoft/ctp-vsts-extension.git"
+    "url": "git+https://github.com/parasoft/ctp-azure-devops-extension.git"
   },
   "keywords": [
     "vsts",
@@ -18,11 +18,11 @@
   "author": "Parasoft Corporation",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/parasoft/ctp-vsts-extension/issues"
+    "url": "https://github.com/parasoft/ctp-azure-devops-extension/issues"
   },
-  "homepage": "https://github.com/parasoft/ctp-vsts-extension#readme",
+  "homepage": "https://github.com/parasoft/ctp-azure-devops-extension#readme",
   "devDependencies": {
-    "q": "^1.4.1",
-    "vsts-task-lib": "^0.9.6"
+    "azure-pipelines-task-lib": "^2.12.0",
+    "q": "^1.4.1"
   }
 }

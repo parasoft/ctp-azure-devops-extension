@@ -1,12 +1,11 @@
 /// <reference path="../typings/index.d.ts" />
 /// <reference path="../typings/parasoft-em-api.d.ts" />
-/// <reference path="../typings/vsts-task-lib.d.ts" />
 
 import http = require('http');
 import https = require('https');
 import q = require('q');
 import url = require('url');
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 
 // Get Environment Manager configuration
 
@@ -21,8 +20,8 @@ var protocol : any = emBaseURL.protocol === 'https:' ? https : http;
 var protocolLabel = emBaseURL.protocol || 'http:';
 var emAuthorization = tl.getEndpointAuthorization(emEndpoint, true);
 
-var getFromEM = function(path: string) {
-    var def = q.defer();
+var getFromEM = function<T>(path: string) : q.Promise<T>{
+    var def = q.defer<T>();
     var options = {
         host: emBaseURL.hostname,
         port: emBaseURL.port,
@@ -57,8 +56,8 @@ var getFromEM = function(path: string) {
     return def.promise;
 };
 
-var findInEM = function(path: string, property: string, name: string) {
-    var def = q.defer();
+var findInEM = function<T>(path: string, property: string, name: string) :q.Promise<T> {
+    var def = q.defer<T>();
     var options = {
         host: emBaseURL.hostname,
         port: emBaseURL.port,
@@ -104,8 +103,8 @@ var findInEM = function(path: string, property: string, name: string) {
     return def.promise;
 };
 
-var postToEM = function(path: string, data: any) {
-    var def = q.defer();
+var postToEM = function<T>(path: string, data: any) : q.Promise<T>{
+    var def = q.defer<T>();
     var options = {
         host: emBaseURL.hostname,
         port: parseInt(emBaseURL.port),
@@ -154,20 +153,20 @@ var copyToVirtualize = tl.getInput('CopyToVirtualize', false);
 var virtualizeName = tl.getInput('VirtServerName', false);
 var newEnvironmentName = tl.getInput('NewEnvironmentName', false);
 var virtualizeServerId;
-var instancesPromise = findInEM('/api/v2/systems', 'systems', systemName).then((system: EMSystem) => {
+var instancesPromise = findInEM<EMSystem>('/api/v2/systems', 'systems', systemName).then((system: EMSystem) => {
     tl.debug('Found system ' + system.name + ' with id ' + system.id);
     systemId = system.id;
-    return findInEM('/api/v2/environments', 'environments', environmentName);
+    return findInEM<EMEnvironment>('/api/v2/environments', 'environments', environmentName);
 }).then((environment: EMEnvironment) => {
     environmentId = environment.id;
-    return findInEM('/api/v2/environments/' + environmentId + '/instances', 'instances', instanceName);
+    return findInEM<EMEnvironmentInstance>('/api/v2/environments/' + environmentId + '/instances', 'instances', instanceName);
 });
 if (copyToVirtualize === 'true') {
-    instancesPromise = instancesPromise.then((instance) => {
-        return findInEM('/api/v2/servers', 'servers', virtualizeName);
+    instancesPromise = instancesPromise.then((instance : EMEnvironmentInstance) => {
+        return findInEM<VirtServer>('/api/v2/servers', 'servers', virtualizeName);
     }).then((server: VirtServer) => {
         virtualizeServerId = server.id;
-        return postToEM('/api/v2/environments/copy?async=false', {
+        return postToEM<EMEnvironmentCopyResult>('/api/v2/environments/copy?async=false', {
             originalEnvId: environmentId,
             serverId: virtualizeServerId,
             newEnvironmentName: newEnvironmentName,
@@ -175,12 +174,12 @@ if (copyToVirtualize === 'true') {
         });
     }).then((copyResult: EMEnvironmentCopyResult) => {
         environmentId = copyResult.environmentId;
-        return findInEM('/api/v2/environments/' + environmentId + '/instances', 'instances', instanceName);
+        return findInEM<EMEnvironmentInstance>('/api/v2/environments/' + environmentId + '/instances', 'instances', instanceName);
     });
 }
 instancesPromise.then((instance: EMEnvironmentInstance) => {
     instanceId = instance.id;
-    return postToEM('/api/v2/provisions', {
+    return postToEM<EMProvisionResult>('/api/v2/provisions', {
         environmentId: environmentId,
         instanceId: instanceId,
         abortOnFailure: false
@@ -189,7 +188,7 @@ instancesPromise.then((instance: EMEnvironmentInstance) => {
     var eventId = res.eventId;
     var status = res.status;
     var checkStatus = function() {
-        getFromEM('/api/v2/provisions/' + eventId).then((res: EMProvisionResult) => {
+        getFromEM<EMProvisionResult>('/api/v2/provisions/' + eventId).then((res: EMProvisionResult) => {
             status = res.status;
             if (status === 'running' || status === 'waiting') {
                 setTimeout(checkStatus, 1000);
