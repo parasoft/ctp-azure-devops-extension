@@ -4,11 +4,14 @@
   "description": "Deploy and destroy service virtualization environments with Parasoft Continuous Testing Platform (CTP)",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "compile": "tsc --project DeployTask/tsconfig.json && tsc --project DestroyTask/tsconfig.json",
+    "package": "npx tfx extension create --manifests azure-devops-extension.json",
+    "build": "npm run compile && npm run package"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/parasoft/ctp-vsts-extension.git"
+    "url": "git+https://github.com/parasoft/ctp-azure-devops-extension.git"
   },
   "keywords": [
     "vsts",
@@ -19,11 +22,7 @@
   "author": "Parasoft Corporation",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/parasoft/ctp-vsts-extension/issues"
+    "url": "https://github.com/parasoft/ctp-azure-devops-extension/issues"
   },
-  "homepage": "https://github.com/parasoft/ctp-vsts-extension#readme",
-  "devDependencies": {
-    "q": "^1.4.1",
-    "vsts-task-lib": "^0.9.6"
-  }
+  "homepage": "https://github.com/parasoft/ctp-azure-devops-extension#readme"
 }
