@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "initdev": "npm install && npm run initdev:npm:tasks",
     "initdev:npm:tasks": "glob-exec --parallel --foreach \"*/tsconfig.json\" -- \"cd {{file.dir}} && npm install\"",
-    "compile": "npm run initdev && tsc --project DeployTask/tsconfig.json && tsc --project DestroyTask/tsconfig.json",
+    "compile": "npm run initdev && tsc --project DeployTask/tsconfig.json && tsc --project DestroyTask/tsconfig.json && tsc --project DisconnectTask/tsconfig.json",
     "package": "npx tfx extension create --manifests azure-devops-extension.json",
     "build": "npm run compile && npm run package"
   },
@@ -19,7 +19,8 @@
     "vsts",
     "parasoft",
     "deploy",
-    "destroy"
+    "destroy",
+    "disconnect"
   ],
   "author": "Parasoft Corporation",
   "license": "Apache-2.0",

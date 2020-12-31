@@ -33,6 +33,9 @@
         },
         {
             "path": "DestroyTask"
+        },
+        {
+            "path": "DisconnectTask"
         }
     ],
     "screenshots": [
@@ -109,6 +112,16 @@
             ],
             "properties": {
                 "name": "DestroyTask"
+            }
+        },
+		{
+            "id": "disconnect-task",
+            "type": "ms.vss-distributed-task.task",
+            "targets": [
+                "ms.vss-distributed-task.tasks"
+            ],
+            "properties": {
+                "name": "DisconnectTask"
             }
         }
     ]

@@ -1,0 +1,28 @@
+{
+  "name": "ctp-vsts-disconnect",
+  "version": "1.1.7",
+  "description": "Disconnect a Parasoft Virtualize Server from Parasoft Continuous Testing Platform (CTP)",
+  "main": "disconnect.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/parasoft/ctp-azure-devops-extension.git"
+  },
+  "keywords": [
+    "vsts",
+    "parasoft",
+    "disconnect"
+  ],
+  "author": "Parasoft Corporation",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/parasoft/ctp-azure-devops-extension/issues"
+  },
+  "homepage": "https://github.com/parasoft/ctp-azure-devops-extension#readme",
+  "devDependencies": {
+    "azure-pipelines-task-lib": "^2.12.0",
+    "q": "^1.4.1"
+  }
+}
