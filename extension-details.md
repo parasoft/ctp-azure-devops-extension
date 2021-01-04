@@ -19,6 +19,8 @@ The extension adds the following build tasks to Visual Studio Team Services:
   Remove a service virtualization environment and clean up all related artifacts.  This step is useful in conjunction with the copy environment option in the deploy step.
 * Parasoft Service Virtualization Disconnect
   Unregister a Virtualize server from the Continuous Testing Platform (CTP).  This step helps clean up records from temporary Service Virtualization VMs that no longer exist.
+* Parasoft API Testing Job Execute
+  Execute a collection of API functional tests defined in a job from the Continuous Testing Platform (CTP).
   
 ## Documentation
 You can find detailed documentation on how to create service virtualization environments by installing the Parasoft Service Virtualization artifact in Azure and opening a browser to the host name / ip address to see the online user guide.

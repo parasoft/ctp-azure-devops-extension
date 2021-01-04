@@ -2,7 +2,7 @@
     "manifestVersion": 1,
     "id": "ctp-vsts-extension",
     "name": "Parasoft Continuous Testing",
-    "version": "1.9.0",
+    "version": "1.9.1",
     "publisher": "parasoft",
     "public": true,
     "scopes": [ "vso.build_execute", "vso.serviceendpoint_manage" ],
@@ -36,6 +36,9 @@
         },
         {
             "path": "DisconnectTask"
+        },
+        {
+            "path": "ExecuteTask"
         }
     ],
     "screenshots": [
@@ -123,6 +126,16 @@
             "properties": {
                 "name": "DisconnectTask"
             }
-        }
+        },
+                {
+                    "id": "execute-task",
+                    "type": "ms.vss-distributed-task.task",
+                    "targets": [
+                        "ms.vss-distributed-task.tasks"
+                    ],
+                    "properties": {
+                        "name": "ExecuteTask"
+                    }
+                }
     ]
 }
