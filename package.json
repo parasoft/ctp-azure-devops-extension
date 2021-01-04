@@ -1,22 +1,21 @@
 {
-  "name": "ctp-vsts-extension",
-  "version": "1.1.7",
+  "name": "ctp-azure-devops-extension",
+  "version": "1.9.0",
   "description": "Deploy and destroy service virtualization environments with Parasoft Continuous Testing Platform (CTP)",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "initdev": "npm install && npm run initdev:npm:tasks",
     "initdev:npm:tasks": "glob-exec --parallel --foreach \"*/tsconfig.json\" -- \"cd {{file.dir}} && npm install\"",
-    "compile": "npm run initdev && tsc --project DeployTask/tsconfig.json && tsc --project DestroyTask/tsconfig.json && tsc --project DisconnectTask/tsconfig.json",
+    "compile": "glob-exec \"*/tsconfig.json\" -- \"tsc -b {{files.join(' ')}}\"",
     "package": "npx tfx extension create --manifests azure-devops-extension.json",
-    "build": "npm run compile && npm run package"
+    "build": "npm run initdev && npm run compile && npm run package"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/parasoft/ctp-azure-devops-extension.git"
   },
   "keywords": [
-    "vsts",
     "parasoft",
     "deploy",
     "destroy",

@@ -30,6 +30,40 @@ interface EMEnvironmentInstance {
     name: string;
 }
 
+interface EMJob {
+    id: number;
+    name: string;
+    fork?: boolean;
+    historyCountLimit?: number;
+    historyDaysLimit?: number;
+    testConfiguration?: string;
+    context?: {
+        systemId: number;
+        environmentId: number;
+        environmentInstanceId: number;
+    }
+    testScenarioInstances: EMTestScenarioInstance[];
+}
+
+interface EMJobHistory {
+    id: number;
+    startTime?: number;
+    status?: string;
+    username?: string;
+    completionTime?: number;
+    percentage?: number;
+    jobId?: number;
+    jobName?: string;
+    context?: {
+        systemId: number;
+        environmentId: number;
+        environmentInstanceId: number;
+    }
+    testHistories?: any[];
+    reportIds?: number[];
+    testExecutionIds?:  string[];
+}
+
 interface EMProvisionResult {
     eventId: number;
     environmentId: number;
@@ -52,6 +86,18 @@ interface EMSystem {
     name: string;
     version?: string;
     description?: string;
+}
+
+interface EMTestScenarioInstance {
+    id: number;
+    priority?: number;
+    testScenarioId: number;
+    variableSet?: string;
+    variables: any[];
+    dataSourceRows?: {
+        dataSource?: string;
+        rows: string;
+    }
 }
 
 interface VirtServer {

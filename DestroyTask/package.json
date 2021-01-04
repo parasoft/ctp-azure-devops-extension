@@ -1,6 +1,6 @@
 {
-  "name": "ctp-vsts-destroy",
-  "version": "1.1.7",
+  "name": "ctp-azure-devops-destroy",
+  "version": "1.9.0",
   "description": "Destroy service virtualization environments with Parasoft Continuous Testing Platform (CTP)",
   "main": "destroy.js",
   "scripts": {
@@ -11,7 +11,6 @@
     "url": "git+https://github.com/parasoft/ctp-azure-devops-extension.git"
   },
   "keywords": [
-    "vsts",
     "parasoft",
     "destroy"
   ],
