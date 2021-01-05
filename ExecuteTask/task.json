@@ -34,6 +34,23 @@
       "defaultValue": "",
       "helpMarkDown": "Name of the job",
       "required": true
+    },
+    {
+      "name": "AbortOnTimeout",
+      "type": "boolean",
+      "label": "Abort job after timeout",
+      "defaultValue": "",
+      "helpMarkDown": "Job will be aborted when execution time exceeds the specified timeout",
+      "required": false
+    },
+    {
+      "name": "TimeoutInMinutes",
+      "type": "string",
+      "label": "Timeout minutes",
+      "defaultValue": "",
+      "helpMarkDown": "Allowed execution time mesaured in minutes before the job is aborted",
+      "required" : true,
+      "visibleRule": "AbortOnTimeout == true"
     }
   ],
   "execution": {
