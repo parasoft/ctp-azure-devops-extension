@@ -203,9 +203,8 @@ findInEM<EMJob>('/api/v2/jobs', 'jobs', jobName).then((job: EMJob) => {
             if (abortOnTimout) {
                 var timespent = (new Date().getTime() - startTime) / 60000;
                 if (timespent > parseInt(timeout)) {
-                    putToEM('/api/v2/jobs/' + jobId + '/histories/' + historyId, {status : 'CANCELED'}).then(response => {
-                        tl.setResult(tl.TaskResult.Failed, 'Job ' + tl.getInput('Job', true) + ' timed out.');
-                    });
+                    putToEM('/api/v2/jobs/' + jobId + '/histories/' + historyId, {status : 'CANCELED'});
+                    tl.setResult(tl.TaskResult.Failed, 'Job ' + tl.getInput('Job', true) + ' timed out.');
                     return;
                 }
             }
