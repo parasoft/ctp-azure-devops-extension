@@ -201,9 +201,11 @@ findInEM<EMJob>('/api/v2/jobs', 'jobs', jobName).then((job: EMJob) => {
         getFromEM<EMJobHistory>('/api/v2/jobs/' + jobId + '/histories/' + historyId).then((res: EMJobHistory) => {
             status = res.status;
             if (abortOnTimout) {
-                var timespent = (new Date().getTime() - startTime) / 60000;
-                if (timespent > parseInt(timeout)) {
+                var timespent = (new Date().getTime() - startTime) / 60000,
+                    timeoutNum = parseInt(timeout);
+                if (timespent > timeoutNum) {
                     putToEM('/api/v2/jobs/' + jobId + '/histories/' + historyId, {status : 'CANCELED'});
+                    tl.error("Test execution job timed out after " + timeoutNum + " minute" + (timeoutNum > 1 ? 's' : "") + '.');
                     tl.setResult(tl.TaskResult.Failed, 'Job ' + tl.getInput('Job', true) + ' timed out.');
                     return;
                 }
