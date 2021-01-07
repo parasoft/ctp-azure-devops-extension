@@ -150,6 +150,7 @@ var environmentId;
 var instanceName = tl.getInput('Instance', true);
 var instanceId;
 var copyToVirtualize = tl.getInput('CopyToVirtualize', false);
+var duplicateDataRepo = tl.getInput('DuplicateDataRepos', false);
 var virtualizeName = tl.getInput('VirtServerName', false);
 var newEnvironmentName = tl.getInput('NewEnvironmentName', false);
 var virtualizeServerId;
@@ -166,12 +167,24 @@ if (copyToVirtualize === 'true') {
         return findInEM<VirtServer>('/api/v2/servers', 'servers', virtualizeName);
     }).then((server: VirtServer) => {
         virtualizeServerId = server.id;
-        return postToEM<EMEnvironmentCopyResult>('/api/v2/environments/copy?async=false', {
+        var duplicateType = tl.getInput('duplicateType', false);
+        var copyEnv: {[k: string]: any} = {
             originalEnvId: environmentId,
             serverId: virtualizeServerId,
             newEnvironmentName: newEnvironmentName,
-            copyDataRepo: false
-        });
+            copyDataRepo: duplicateDataRepo
+        };
+        if (duplicateType === 'target' || duplicateType === 'custom') {
+            var dataRepoSettings = {
+                "host": duplicateType === 'target' ? server.host : tl.getInput('repoHost', false),
+                "port": tl.getInput('repoPort', false),
+                "username": tl.getInput('repoUser', false),
+                "password": tl.getInput('repoPassword', false),
+            }
+            copyEnv.dataRepoSettings = dataRepoSettings;
+            console.log("Data repo host: " + dataRepoSettings.host);
+        }
+        return postToEM<EMEnvironmentCopyResult>('/api/v2/environments/copy?async=false', copyEnv);
     }).then((copyResult: EMEnvironmentCopyResult) => {
         environmentId = copyResult.environmentId;
         return findInEM<EMEnvironmentInstance>('/api/v2/environments/' + environmentId + '/instances', 'instances', instanceName);

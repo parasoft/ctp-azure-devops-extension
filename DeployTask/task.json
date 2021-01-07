@@ -62,7 +62,7 @@
     {
         "name": "VirtServerName",
         "type": "string",
-        "label": "Virtualize sever name",
+        "label": "Virtualize server name",
         "defaultValue": "",
         "helpMarkDown": "The environment assets will be copied to a Virtualize server matching this name",
         "required": false,
@@ -76,6 +76,65 @@
         "helpMarkDown": "The name for the replicated environment can be used to later destroy the environment",
         "required": false,
         "visibleRule": "CopyToVirtualize = true"
+    },
+    {
+      "name": "DuplicateDataRepos",
+      "type": "boolean",
+      "label": "Duplicate data repositories",
+      "defaultValue": "",
+      "helpMarkDown": "Duplicate associated data repositories before provisioning",
+      "required": false,
+      "visibleRule": "CopyToVirtualize = true"
+    },
+    {
+      "name": "duplicateType",
+      "type": "radio",
+      "label": "Server location",
+      "required": false,
+      "helpMarkDown": "Where to duplicate data repository",
+      "defaultValue": "default",
+      "visibleRule": "DuplicateDataRepos = true",
+      "options": {
+        "default": "On the current Data Repository server",
+        "target": "To a Data Repository server on the same host as the target Virtualize server",
+        "custom": "To a Data Repository server on a specific host"
+      }
+    },
+    {
+      "name": "repoHost",
+      "type": "string",
+      "label": "Repository host",
+      "defaultValue": "",
+      "helpMarkDown": "The host of the data repository server",
+      "required": false,
+      "visibleRule": "duplicateType=custom"
+    },
+    {
+      "name": "repoPort",
+      "type": "string",
+      "label": "Repository port",
+      "defaultValue": "",
+      "helpMarkDown": "The port of the data repository server",
+      "required": false,
+      "visibleRule": "duplicateType = target || duplicateType=custom"
+    },
+    {
+      "name": "repoUser",
+      "type": "string",
+      "label": "Repository username",
+      "defaultValue": "",
+      "helpMarkDown": "The username of the data repository server",
+      "required": false,
+      "visibleRule": "duplicateType = target || duplicateType=custom"
+    },
+    {
+      "name": "repoPassword",
+      "type": "string",
+      "label": "Repository password",
+      "defaultValue": "",
+      "helpMarkDown": "The password of the data repository server",
+      "required": false,
+      "visibleRule": "duplicateType = target || duplicateType=custom"
     }
   ],
   "execution": {
