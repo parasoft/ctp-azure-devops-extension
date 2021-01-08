@@ -29,11 +29,13 @@
     },
     {
       "name": "System",
-      "type": "string",
+      "type": "pickList",
       "label": "System",
-      "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Name of the system"
+      "helpMarkDown": "Name of the system",
+	  "properties" : {
+		"EditableOptions" : "True"
+	  }
     },
     {
       "name": "Environment",
@@ -76,6 +78,13 @@
         "helpMarkDown": "The name for the replicated environment can be used to later destroy the environment",
         "required": false,
         "visibleRule": "CopyToVirtualize = true"
+    }
+  ],
+  "dataSourceBindings" : [
+    {
+		"target": "System",
+		"endpointId": "$(ParasoftEMEndpoint)",
+		"dataSourceName": "systemData"
     }
   ],
   "execution": {
