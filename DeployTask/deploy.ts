@@ -143,10 +143,10 @@ var postToEM = function<T>(path: string, data: any) : q.Promise<T>{
     return def.promise;
 }
 
-var systemName = tl.getInput('System', true);
-var systemId;
-var environmentName = tl.getInput('Environment', true);
-var environmentId;
+var systemValue:string = tl.getInput('System', true);
+var systemId:number = +systemValue;
+var environmentValue:string = tl.getInput('Environment', true);
+var environmentId:number = +environmentValue;
 var instanceName = tl.getInput('Instance', true);
 var instanceId;
 var copyToVirtualize = tl.getInput('CopyToVirtualize', false);
@@ -154,14 +154,7 @@ var duplicateDataRepo = tl.getInput('DuplicateDataRepos', false);
 var virtualizeName = tl.getInput('VirtServerName', false);
 var newEnvironmentName = tl.getInput('NewEnvironmentName', false);
 var virtualizeServerId;
-var instancesPromise = findInEM<EMSystem>('/api/v2/systems', 'systems', systemName).then((system: EMSystem) => {
-    tl.debug('Found system ' + system.name + ' with id ' + system.id);
-    systemId = system.id;
-    return findInEM<EMEnvironment>('/api/v2/environments', 'environments', environmentName);
-}).then((environment: EMEnvironment) => {
-    environmentId = environment.id;
-    return findInEM<EMEnvironmentInstance>('/api/v2/environments/' + environmentId + '/instances', 'instances', instanceName);
-});
+var instancesPromise = findInEM<EMEnvironmentInstance>('/api/v2/environments/' + environmentId + '/instances', 'instances', instanceName);
 if (copyToVirtualize === 'true') {
     instancesPromise = instancesPromise.then((instance : EMEnvironmentInstance) => {
         return findInEM<VirtServer>('/api/v2/servers', 'servers', virtualizeName);

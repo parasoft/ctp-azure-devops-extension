@@ -69,12 +69,12 @@
 					{
 					   "name": "systemData",
 					   "endpointUrl": "{{endpoint.url}}/api/v2/systems",
-					   "resultSelector": "jsonpath:$.systems.[*].name"
+					   "resultSelector": "jsonpath:$.systems[*]"
 					},
 					{
 					   "name": "environmentData",
 					   "endpointUrl": "{{endpoint.url}}/api/v2/environments",
-					   "resultSelector": "jsonpath:$.environments.[*].name"
+					   "resultSelector": "jsonpath:$.environments[?(@.systemId == {{systemId}})]"
 					}
 				],
                 "authenticationSchemes": [

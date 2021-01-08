@@ -169,19 +169,12 @@ var postToEM = function<T>(path: string, data: any) : q.Promise<T>{
     req.end();
     return def.promise;
 }
-
-var systemName = tl.getInput('System', true);
-var systemId;
-var environmentName = tl.getInput('Environment', true);
-var environmentId;
-findInEM<EMSystem>('/api/v2/systems', 'systems', systemName).then((system: EMSystem) => {
-    tl.debug('Found system ' + system.name + ' with id ' + system.id);
-    systemId = system.id;
-    return findInEM<EMEnvironment>('/api/v2/environments', 'environments', environmentName);
-}).then((environment: EMEnvironment) => {
-    environmentId = environment.id;
-    return deleteFromEM<EMEnvironment>('/api/v2/environments/' + environmentId + '?recursive=true');
-}).then((res: EMEnvironment) => {
+var systemValue:string = tl.getInput('System', true);
+var systemId:number = +systemValue;
+var environmentValue:string = tl.getInput('Environment', true);
+var environmentId:number = +environmentValue;
+deleteFromEM<EMEnvironment>('/api/v2/environments/' + environmentId + '?recursive=true')
+.then((res: EMEnvironment) => {
     if (res.name) {
         tl.debug('Successfully deleted ' + res.name);
         tl.setResult(tl.TaskResult.Succeeded, 'Successfully deleted ' + res.name);

@@ -17,7 +17,7 @@
     "Patch": "1"
   },
   "minimumAgentVersion": "1.103.0",
-  "instanceNameFormat": "Destroy Environment: $(Environment)",
+  "instanceNameFormat": "Destroy Environment",
   "inputs": [
     {
       "name": "ParasoftEMEndpoint",
@@ -32,10 +32,7 @@
       "type": "pickList",
       "label": "System",
       "required": true,
-      "helpMarkDown": "Name of the system",
-	  "properties" : {
-		"EditableOptions" : "True"
-	  }
+      "helpMarkDown": "Name of the system"
     },
     {
       "name": "Environment",
@@ -43,22 +40,24 @@
       "label": "Environment",
       "defaultValue": "",
       "helpMarkDown": "Name of the environment",
-      "required": true,
-	  "properties" : {
-		"EditableOptions" : "True"
-	  }
+      "required": true
     },
   ],
   "dataSourceBindings" : [
     {
 		"target": "System",
 		"endpointId": "$(ParasoftEMEndpoint)",
-		"dataSourceName": "systemData"
+		"dataSourceName": "systemData",
+		"resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     },
-	    {
+	{
 		"target": "Environment",
 		"endpointId": "$(ParasoftEMEndpoint)",
-		"dataSourceName": "environmentData"
+		"dataSourceName": "environmentData",
+		"parameters": {
+			"systemId": "$(System)"
+		},
+		"resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     }
   ],
   "execution": {
