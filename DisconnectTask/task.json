@@ -50,13 +50,23 @@
     },
     {
       "name": "serverName",
-      "type": "string",
+      "type": "pickList",
       "label": "Virtualize name",
       "defaultValue": "",
       "helpMarkDown": "Match a Virtualize server by name",
+      "properties" : {
+        "EditableOptions" : "True"
+      },
       "required": true,
       "visibleRule": "serverType = name"
-    },
+    }
+  ],
+  "dataSourceBindings": [
+      {
+          "target": "serverName",
+          "endpointId": "$(ParasoftEMEndpoint)",
+          "dataSourceName": "VirtualizeServers"
+      }
   ],
   "execution": {
     "Node": {
