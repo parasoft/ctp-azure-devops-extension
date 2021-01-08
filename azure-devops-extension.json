@@ -70,7 +70,12 @@
 					   "name": "systemData",
 					   "endpointUrl": "{{endpoint.url}}/api/v2/systems",
 					   "resultSelector": "jsonpath:$.systems.[*].name"
-					}
+                    },
+                    {
+                        "name": "VirtualizeServers",
+                        "endpointUrl": "{{endpoint.url}}/em/api/v2/servers",
+                        "resultSelector": "jsonpath:$.servers.[*].name"
+                    }
 				],
                 "authenticationSchemes": [
                     {
