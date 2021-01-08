@@ -39,18 +39,26 @@
     },
     {
       "name": "Environment",
-      "type": "string",
+      "type": "pickList",
       "label": "Environment",
       "defaultValue": "",
       "helpMarkDown": "Name of the environment",
-      "required": true
-    }
+      "required": true,
+	  "properties" : {
+		"EditableOptions" : "True"
+	  }
+    },
   ],
   "dataSourceBindings" : [
     {
 		"target": "System",
 		"endpointId": "$(ParasoftEMEndpoint)",
 		"dataSourceName": "systemData"
+    },
+	    {
+		"target": "Environment",
+		"endpointId": "$(ParasoftEMEndpoint)",
+		"dataSourceName": "environmentData"
     }
   ],
   "execution": {

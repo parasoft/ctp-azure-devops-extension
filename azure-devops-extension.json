@@ -2,7 +2,7 @@
     "manifestVersion": 1,
     "id": "ctp-vsts-extension",
     "name": "Parasoft Continuous Testing",
-    "version": "1.9.3",
+    "version": "1.9.4",
     "publisher": "parasoft",
     "public": true,
     "scopes": [ "vso.build_execute", "vso.serviceendpoint_manage" ],
@@ -70,6 +70,11 @@
 					   "name": "systemData",
 					   "endpointUrl": "{{endpoint.url}}/api/v2/systems",
 					   "resultSelector": "jsonpath:$.systems.[*].name"
+					},
+					{
+					   "name": "environmentData",
+					   "endpointUrl": "{{endpoint.url}}/api/v2/environments",
+					   "resultSelector": "jsonpath:$.environments.[*].name"
 					}
 				],
                 "authenticationSchemes": [
