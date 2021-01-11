@@ -77,6 +77,11 @@
                  "resultSelector": "jsonpath:$.environments[?(@.systemId == {{systemId}})]"
               },
               {
+                "name": "instanceData",
+                "endpointUrl": "{{endpoint.url}}/api/v2/environments/{{environmentId}}/instances",
+                "resultSelector": "jsonpath:$.instances[*].name"
+             },
+              {
                   "name": "VirtualizeServers",
                   "endpointUrl": "{{endpoint.url}}/api/v2/servers",
                   "resultSelector": "jsonpath:$.servers.[*].name"
