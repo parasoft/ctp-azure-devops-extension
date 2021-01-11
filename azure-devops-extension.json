@@ -78,8 +78,13 @@
               },
               {
                   "name": "VirtualizeServers",
-                  "endpointUrl": "{{endpoint.url}}/em/api/v2/servers",
+                  "endpointUrl": "{{endpoint.url}}/api/v2/servers",
                   "resultSelector": "jsonpath:$.servers.[*].name"
+              },
+			  {
+                  "name": "jobData",
+                  "endpointUrl": "{{endpoint.url}}/api/v2/jobs",
+                  "resultSelector": "jsonpath:$.jobs[*].name"
               }
             ],
                 "authenticationSchemes": [

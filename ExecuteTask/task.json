@@ -29,9 +29,8 @@
     },
     {
       "name": "Job",
-      "type": "string",
+      "type": "pickList",
       "label": "Job",
-      "defaultValue": "",
       "helpMarkDown": "Name of the job",
       "required": true
     },
@@ -51,6 +50,13 @@
       "helpMarkDown": "Allowed execution time mesaured in minutes before the job is aborted",
       "required" : true,
       "visibleRule": "AbortOnTimeout == true"
+    }
+  ],
+  "dataSourceBindings" : [
+    {
+		"target": "Job",
+		"endpointId": "$(ParasoftEMEndpoint)",
+		"dataSourceName": "jobData"
     }
   ],
   "execution": {
