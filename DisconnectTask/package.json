@@ -1,6 +1,6 @@
 {
   "name": "ctp-azure-devops-disconnect",
-  "version": "1.9.1",
+  "version": "1.9.5",
   "description": "Disconnect a Parasoft Virtualize Server from Parasoft Continuous Testing Platform (CTP)",
   "main": "disconnect.js",
   "scripts": {
@@ -22,6 +22,6 @@
   "homepage": "https://github.com/parasoft/ctp-azure-devops-extension#readme",
   "devDependencies": {
     "azure-pipelines-task-lib": "^2.12.0",
-    "q": "^1.4.1"
+    "q": "^1.5.1"
   }
 }

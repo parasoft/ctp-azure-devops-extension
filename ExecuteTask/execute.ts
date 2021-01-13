@@ -1,4 +1,3 @@
-/// <reference path="../typings/index.d.ts" />
 /// <reference path="../typings/parasoft-em-api.d.ts" />
 
 import http = require('http');
@@ -186,7 +185,7 @@ function publishReport(reportId : number) : q.Promise<void> {
     var def = q.defer<void>();
     ctpService.performGET("/testreport/" + reportId + "/report.xml",  (res, def, responseStr) => { 
         def.resolve(responseStr)
-    }).then(xmlFile => {
+    }).then((xmlFile: any) => {
         fs.writeFile('report.xml', xmlFile, (err) => {
             if (err) {
                 def.reject(err);

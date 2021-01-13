@@ -1,4 +1,3 @@
-/// <reference path="../typings/index.d.ts" />
 /// <reference path="../typings/parasoft-em-api.d.ts" />
 
 import http = require('http');
