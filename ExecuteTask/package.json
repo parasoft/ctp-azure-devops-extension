@@ -1,6 +1,6 @@
 {
   "name": "ctp-azure-devops-execute",
-  "version": "1.9.5",
+  "version": "1.9.6",
   "description": "Run a test execution job with Parasoft Continuous Testing Platform (CTP)",
   "main": "execute.js",
   "scripts": {
