@@ -50,6 +50,23 @@
       "helpMarkDown": "Allowed execution time mesaured in minutes before the job is aborted",
       "required" : true,
       "visibleRule": "AbortOnTimeout == true"
+    },
+    {
+      "name": "PublishDTPReport",
+      "type": "boolean",
+      "label": "Publish test execution results to DTP",
+      "defaultValue": "",
+      "helpMarkDown": "Publish test execution results to DTP",
+      "required": false
+    },
+    {
+      "name": "ParasoftDTPEndpoint",
+      "type": "connectedService:parasoftdtp",
+      "label": "Parasoft DTP Endpoint",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Parasoft Development Testing Platform remote service endpoint",
+      "visibleRule": "PublishDTPReport == true"
     }
   ],
   "dataSourceBindings" : [
