@@ -22,6 +22,7 @@
   "homepage": "https://github.com/parasoft/ctp-azure-devops-extension#readme",
   "devDependencies": {
     "azure-pipelines-task-lib": "^2.12.0",
-    "q": "^1.4.1"
+    "q": "^1.4.1",
+    "form-data": "^3.0.0"
   }
 }
