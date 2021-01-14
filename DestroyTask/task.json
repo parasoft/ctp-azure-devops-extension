@@ -36,7 +36,7 @@
     },
     {
       "name": "Environment",
-      "type": "pickList",
+      "type": "string",
       "label": "Environment",
       "defaultValue": "",
       "helpMarkDown": "Name of the environment",
@@ -48,15 +48,6 @@
 		"target": "System",
 		"endpointId": "$(ParasoftEMEndpoint)",
 		"dataSourceName": "systemData",
-		"resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
-    },
-	{
-		"target": "Environment",
-		"endpointId": "$(ParasoftEMEndpoint)",
-		"dataSourceName": "environmentData",
-		"parameters": {
-			"systemId": "$(System)"
-		},
 		"resultTemplate": "{ \"Value\" : \"{{{id}}}\", \"DisplayValue\" : \"{{{name}}}\" }"
     }
   ],
