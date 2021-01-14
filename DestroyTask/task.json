@@ -37,7 +37,7 @@
     {
       "name": "Environment",
       "type": "string",
-      "label": "Environment",
+      "label": "Environment name",
       "defaultValue": "",
       "helpMarkDown": "Name of the environment",
       "required": true
