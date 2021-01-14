@@ -92,7 +92,7 @@ var deleteFromEM = function<T>(path: string) : q.Promise<T>{
     return def.promise;
 };
 
-var findInEM = function<T>(path: string, property: string, name: string) : q.Promise<T>{
+var findInEM = function<T>(path: string, property: string, name: string, otherProperty:string, otherMatch: any) : q.Promise<T>{
     var def = q.defer<T>();
     var options = {
         host: emBaseURL.hostname,
@@ -125,6 +125,9 @@ var findInEM = function<T>(path: string, property: string, name: string) : q.Pro
                 return;
             }
             for (var i = 0; i < responseObject[property].length; i++) {
+				if (responseObject[property][i][otherProperty] !== otherMatch) {
+					continue;
+				}
                 if (responseObject[property][i].name === name) {
                     def.resolve(responseObject[property][i]);
                     return;
@@ -170,10 +173,12 @@ var postToEM = function<T>(path: string, data: any) : q.Promise<T>{
 }
 var systemValue:string = tl.getInput('System', true);
 var systemId:number = +systemValue;
-var environmentValue:string = tl.getInput('Environment', true);
-var environmentId:number = +environmentValue;
-deleteFromEM<EMEnvironment>('/api/v2/environments/' + environmentId + '?recursive=true')
-.then((res: EMEnvironment) => {
+var environmentName = tl.getInput('Environment', true);
+var environmentId;
+findInEM<EMEnvironment>('/api/v2/environments', 'environments', environmentName, 'systemId', systemId).then((environment: EMEnvironment) => {
+    environmentId = environment.id;
+    return deleteFromEM<EMEnvironment>('/api/v2/environments/' + environmentId + '?recursive=true');
+}).then((res: EMEnvironment) => {
     if (res.name) {
         tl.debug('Successfully deleted ' + res.name);
         tl.setResult(tl.TaskResult.Succeeded, 'Successfully deleted ' + res.name);
