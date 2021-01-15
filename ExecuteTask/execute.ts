@@ -81,6 +81,11 @@ class WebService {
         return def.promise;
     }
 
+    public getBaseURL() : string {
+        return this.protocolLabel + '//' + this.baseURL.hostname  +
+        (this.baseURL.port ? ':' + this.baseURL.port : "") + this.baseURL.path;
+    }
+
     public performPUT<T>(path : string, data: any) : q.Promise<T> {
         return this.performRequest(path, data, 'PUT');
     }
@@ -252,8 +257,10 @@ function publishReport(reportId : number, index: number, environmentName? : stri
         });    
         return '';
     }).then(() => {
+        console.log("    View Report: " + ctpService.getBaseURL() + "/testreport/" + reportId + "/report.html");
         uploadFile().then(response => {
-            console.log('report.xml file upload successful: ' + response);
+            console.log('   report.xml file upload successful: ' + response);
+            console.log('   View Result in DTP: ' + dtpService.getBaseURL() + '/dtp/explorers/test?buildId=' + dtpBuildId);
         }).catch((error) => {
             tl.error('Error while uploading report.xml file: ' + error);
         });
