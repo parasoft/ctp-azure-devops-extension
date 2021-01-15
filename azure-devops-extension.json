@@ -132,6 +132,13 @@
             "properties": {
                 "name": "parasoftdtp",
                 "displayName": "Parasoft DTP",
+                "dataSources" : [
+                    {
+                        "name" : "DTPProjectData",
+                        "endpointUrl": "{{endpoint.url}}/api/v1.6/projects?active=true&managedOnly=true",
+                        "resultSelector": "jsonpath:$.[*].name"
+                    }
+                ],
                 "authenticationSchemes": [
                     {
                         "type": "ms.vss-endpoint.endpoint-auth-scheme-basic",

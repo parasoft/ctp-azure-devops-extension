@@ -70,9 +70,8 @@
     },
     {
       "name": "DTPProject",
-      "type": "string",
+      "type": "pickList",
       "label": "Project",
-      "defaultValue": "",
       "helpMarkDown": "DTP Project associated with the job execution ",
       "required" : true,
       "visibleRule": "PublishDTPReport == true"
@@ -81,7 +80,7 @@
       "name": "ReportBuildId",
       "type": "string",
       "label": "Build ID",
-      "defaultValue": "",
+      "defaultValue": "$(Build.BuildId)",
       "helpMarkDown": "Build identifier to be displayed in DTP",
       "required" : true,
       "visibleRule": "PublishDTPReport == true"
@@ -106,9 +105,14 @@
   ],
   "dataSourceBindings" : [
     {
-		"target": "Job",
-		"endpointId": "$(ParasoftEMEndpoint)",
-		"dataSourceName": "jobData"
+		  "target": "Job",
+		  "endpointId": "$(ParasoftEMEndpoint)",
+		  "dataSourceName": "jobData"
+    },
+    {
+      "target": "DTPProject",
+		  "endpointId": "$(ParasoftDTPEndpoint)",
+		  "dataSourceName": "DTPProjectData"
     }
   ],
   "execution": {
