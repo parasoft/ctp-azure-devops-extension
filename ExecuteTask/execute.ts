@@ -26,7 +26,9 @@ class WebService {
         this.protocolLabel = this.baseURL.protocol || 'http:';
     }
 
-    public performGET<T>(path : string, handler?: (res: http.IncomingMessage, def : q.Deferred<T>, responseStr: string) => void) : q.Promise<T>{
+    public performGET<T>(path : string, 
+        handler?: (res: http.IncomingMessage, def : q.Deferred<T>, responseStr: string) => void,
+        dataHandler?: (data : string) => string) : q.Promise<T>{
         var def = q.defer<T>();
         var options : http.RequestOptions = {
             host: this.baseURL.hostname,
@@ -51,7 +53,11 @@ class WebService {
         this.protocol.get(options, (res) => {
             res.setEncoding('utf8');
             res.on('data', (chunk) => {
-                responseString += chunk;
+                if (dataHandler) {
+                    responseString += dataHandler(chunk);
+                } else {
+                    responseString += chunk;
+                }
             });
             res.on('end', () => {
                 if (res.statusCode === 302) {
@@ -60,7 +66,7 @@ class WebService {
                         redirectPath = redirectPath.substring(3);
                     }
                     console.log('    redirect to "' + redirectPath + '"')
-                    this.performGET<T>(redirectPath, handler).then(response => def.resolve(response));
+                    this.performGET<T>(redirectPath, handler, dataHandler).then(response => def.resolve(response));
                 } else if (handler) {
                     handler(res, def, responseString);
                 } else {
@@ -131,8 +137,11 @@ var ctpService = new WebService(tl.getEndpointUrl(ctpEndpoint, true), 'em', tl.g
 var dtpService = null;
 var dtpEndpoint = tl.getInput('ParasoftDTPEndpoint', false);
 var dtpAuthorization = tl.getEndpointAuthorization(dtpEndpoint, false);
+var dtpProject = tl.getInput('DTPProject', false);
+var dtpBuildId = tl.getInput('ReportBuildId', false);
+var dtpSessionTag = tl.getInput('ReportSessionTag', false);
+var appendEnvironmentSet = tl.getBoolInput('AppendEnvironmentSet', false);
 if (dtpEndpoint) {
-    var dtpEndpoint = tl.getInput('ParasoftDTPEndpoint', false);
     dtpService = new WebService(tl.getEndpointUrl(dtpEndpoint, false), 'grs', dtpAuthorization)
 }
 var abortOnTimout = tl.getBoolInput('AbortOnTimeout', false);
@@ -181,32 +190,75 @@ function uploadFile<T>() {
     return def.promise;
 }
 
-function publishReport(reportId : number) : q.Promise<void> {
-    var def = q.defer<void>();
+function replaceAttributeValue(source : string, attribute : string, newValue: string) {
+	var regEx = new RegExp(attribute + '\=\"[^"]*\"');
+	return source.replace(regEx, attribute + '="' + newValue + '"');
+}
+
+function injectMetaData(source : string, index: number, environmentName?: string) : string{
+    if (environmentName) {
+        if (dtpSessionTag == null) {
+            dtpSessionTag = "";
+        }
+        if (dtpSessionTag.length != 0) {
+            dtpSessionTag += '-';
+        }
+        dtpSessionTag += environmentName;
+    } else if ((dtpSessionTag != null) && dtpSessionTag.length !== 0 && (index > 0)) {
+        dtpSessionTag += "-" + (index + 1); // unique session tag in DTP for each report
+    }
+    source = replaceAttributeValue(source, 'project', dtpProject);
+    source = replaceAttributeValue(source, 'buildId', dtpBuildId);
+    source = replaceAttributeValue(source, 'tag', dtpSessionTag);
+    return replaceAttributeValue(source, 'execEnv', environmentName);
+}
+
+function extractEnvironmentNames(job : EMJob) : string[]{
+    var separate = job.fork,
+        lastTestId = null,
+        environmentNames = [];
+    job.testScenarioInstances.forEach((instance => {
+        var testScenarioId = instance.testScenarioId,
+            variableset = instance.variableSet;
+        if (separate || (lastTestId == null || lastTestId === testScenarioId)) {
+            environmentNames.push(variableset);
+        }
+        lastTestId = testScenarioId;
+    }));
+    return environmentNames;
+}
+
+function publishReport(reportId : number, index: number, environmentName? : string) : q.Promise<void> {
+    var def = q.defer<void>(),
+        firstCallback = true;
     ctpService.performGET("/testreport/" + reportId + "/report.xml",  (res, def, responseStr) => { 
         def.resolve(responseStr)
-    }).then((xmlFile: any) => {
-        fs.writeFile('report.xml', xmlFile, (err) => {
-            if (err) {
-                def.reject(err);
+    },
+    (response) => {
+        var fileData = response;
+        if (firstCallback) {
+            fileData = injectMetaData(fileData, index, appendEnvironmentSet ? environmentName : null);
+            firstCallback = false;
+        } 
+        fs.appendFile('report.xml', fileData, (error) => {
+            if (error) {
+                tl.error('Error writing report.xml: ' + error.message)
+                throw error;
             }
-            if ( fs.existsSync('report.xml')) {
-                console.log('report.xml file succesfully downloaded');
-            }
-            uploadFile().then(response => {
-                console.log('upload file response type: ' + typeof response);
-                console.log(response);
-            }).catch((error) => {
-                console.log(error);
-                tl.error("Error while uploading report.xml file");
-            });
+        });    
+        return '';
+    }).then(() => {
+        uploadFile().then(response => {
+            console.log('report.xml file upload successful: ' + response);
+        }).catch((error) => {
+            tl.error('Error while uploading report.xml file: ' + error);
         });
     });
     return def.promise;
 }
 
 var jobName = tl.getInput('Job', true);
-var jobId;
+var job : EMJob;
 ctpService.performGET('/api/v2/jobs', (res, def, responseStr) => {
     console.log('    response ' + res.statusCode + ':  ' + responseStr);
     var responseObject = JSON.parse(responseStr);
@@ -221,22 +273,22 @@ ctpService.performGET('/api/v2/jobs', (res, def, responseStr) => {
         }
     }
     def.reject('Could not find name "' + jobName + '" in jobs from /api/v2/jobs');
-}).then((job: EMJob) => {
-    tl.debug('Found job ' + job.name + ' with id ' + job.id);
-    jobId = job.id;
-    return ctpService.performPOST<EMJobHistory>('/api/v2/jobs/' + jobId + '/histories?async=true', {});
+}).then((response: EMJob) => {
+    tl.debug('Found job ' + response.name + ' with id ' + response.id);
+    job = response;
+    return ctpService.performPOST<EMJobHistory>('/api/v2/jobs/' + job.id + '/histories?async=true', {});
 }) .then((res: EMJobHistory) => {
     var historyId = res.id;
     var status = res.status;
     var startTime = new Date().getTime();
     var checkStatus = function() {
-        ctpService.performGET<EMJobHistory>('/api/v2/jobs/' + jobId + '/histories/' + historyId).then((res: EMJobHistory) => {
+        ctpService.performGET<EMJobHistory>('/api/v2/jobs/' + job.id + '/histories/' + historyId).then((res: EMJobHistory) => {
             status = res.status;
             if (abortOnTimout) {
                 var timespent = (new Date().getTime() - startTime) / 60000,
                     timeoutNum = parseInt(timeout);
                 if (timespent > timeoutNum) {
-                    ctpService.performPUT('/api/v2/jobs/' + jobId + '/histories/' + historyId, {status : 'CANCELED'});
+                    ctpService.performPUT('/api/v2/jobs/' + job.id + '/histories/' + historyId, {status : 'CANCELED'});
                     tl.error("Test execution job timed out after " + timeoutNum + " minute" + (timeoutNum > 1 ? 's' : "") + '.');
                     tl.setResult(tl.TaskResult.Failed, 'Job ' + tl.getInput('Job', true) + ' timed out.');
                     return;
@@ -247,9 +299,10 @@ ctpService.performGET('/api/v2/jobs', (res, def, responseStr) => {
             } else if (status === 'PASSED') {
                 tl.debug('Job ' + tl.getInput('Job', true) + ' passed.');
                 if (dtpService) {
-                    res.reportIds.forEach((reportId) => {
+                    var environmentNames = extractEnvironmentNames(job);
+                    res.reportIds.forEach((reportId, index) => {
                         console.log('    report location: ' + "/testreport/" + reportId + "/report.xml");
-                        publishReport(reportId).catch(err => {
+                        publishReport(reportId, index, environmentNames.length > 0 ? environmentNames.shift() : null).catch(err => {
                             tl.error("Failed to publish report to DTP");
                         });
                     });
@@ -261,9 +314,10 @@ ctpService.performGET('/api/v2/jobs', (res, def, responseStr) => {
             } else {
                 tl.error('Job ' + tl.getInput('Job', true) + ' failed.');
                 if (dtpService) {
-                    res.reportIds.forEach((reportId) => {
+                    res.reportIds.forEach((reportId, index) => {
                         console.log('    report location: ' + "/testreport/" + reportId + "/report.xml");
-                        publishReport(reportId).catch(err => {
+                        var environmentNames = extractEnvironmentNames(job);
+                        publishReport(reportId, index, environmentNames.length > 0 ? environmentNames.shift() : null).catch(err => {
                             tl.error("Failed to publish report to DTP");
                         });
                     });

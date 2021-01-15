@@ -67,6 +67,41 @@
       "required": true,
       "helpMarkDown": "Parasoft Development Testing Platform remote service endpoint",
       "visibleRule": "PublishDTPReport == true"
+    },
+    {
+      "name": "DTPProject",
+      "type": "string",
+      "label": "Project",
+      "defaultValue": "",
+      "helpMarkDown": "DTP Project associated with the job execution ",
+      "required" : true,
+      "visibleRule": "PublishDTPReport == true"
+    },
+    {
+      "name": "ReportBuildId",
+      "type": "string",
+      "label": "Build ID",
+      "defaultValue": "",
+      "helpMarkDown": "Build identifier to be displayed in DTP",
+      "required" : true,
+      "visibleRule": "PublishDTPReport == true"
+    },
+    {
+      "name": "ReportSessionTag",
+      "type": "string",
+      "label": "Session Tag",
+      "defaultValue": "",
+      "helpMarkDown": "Session tag",
+      "required" : true,
+      "visibleRule": "PublishDTPReport == true"
+    },
+    {
+      "name": "AppendEnvironmentSet",
+      "type": "boolean",
+      "label": "Append variable set environment to session tag if configured",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "PublishDTPReport == true"
     }
   ],
   "dataSourceBindings" : [
