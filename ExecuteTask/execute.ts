@@ -18,7 +18,7 @@ class WebService {
         this.baseURL = url.parse(endpoint);
         if (this.baseURL.path === '/') {
             this.baseURL.path += context;
-        } else if (this.baseURL.path === '/em/') {
+        } else if (this.baseURL.path === '/' + context + '/') {
             this.baseURL.path = '/' + context;
         }
         this.authorization = authorization;
@@ -137,7 +137,10 @@ var ctpService = new WebService(tl.getEndpointUrl(ctpEndpoint, true), 'em', tl.g
 var dtpService = null;
 var publish = tl.getBoolInput('PublishDTPReport', false);
 var dtpEndpoint = tl.getInput('ParasoftDTPEndpoint', false);
-var dtpAuthorization = tl.getEndpointAuthorization(dtpEndpoint, false);
+var dtpAuthorization = null;
+if (dtpEndpoint) {
+    dtpAuthorization = tl.getEndpointAuthorization(dtpEndpoint, false);
+}
 var dtpProject = tl.getInput('DTPProject', false);
 var dtpBuildId = tl.getInput('ReportBuildId', false);
 var dtpSessionTag = tl.getInput('ReportSessionTag', false);
