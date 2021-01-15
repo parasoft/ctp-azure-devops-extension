@@ -135,13 +135,14 @@ class WebService {
 var ctpEndpoint = tl.getInput('ParasoftEMEndpoint', true);
 var ctpService = new WebService(tl.getEndpointUrl(ctpEndpoint, true), 'em', tl.getEndpointAuthorization(ctpEndpoint, true));
 var dtpService = null;
+var publish = tl.getBoolInput('PublishDTPReport', false);
 var dtpEndpoint = tl.getInput('ParasoftDTPEndpoint', false);
 var dtpAuthorization = tl.getEndpointAuthorization(dtpEndpoint, false);
 var dtpProject = tl.getInput('DTPProject', false);
 var dtpBuildId = tl.getInput('ReportBuildId', false);
 var dtpSessionTag = tl.getInput('ReportSessionTag', false);
 var appendEnvironmentSet = tl.getBoolInput('AppendEnvironmentSet', false);
-if (dtpEndpoint) {
+if (dtpEndpoint && publish) {
     dtpService = new WebService(tl.getEndpointUrl(dtpEndpoint, false), 'grs', dtpAuthorization)
 }
 var abortOnTimout = tl.getBoolInput('AbortOnTimeout', false);
