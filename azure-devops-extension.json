@@ -2,7 +2,7 @@
     "manifestVersion": 1,
     "id": "ctp-vsts-extension",
     "name": "Parasoft Continuous Testing",
-    "version": "1.9.7",
+    "version": "1.9.8",
     "publisher": "parasoft",
     "public": true,
     "scopes": [ "vso.build_execute", "vso.serviceendpoint_manage" ],
