@@ -23,4 +23,4 @@ The extension adds the following build tasks to Visual Studio Team Services:
   Execute a collection of API functional tests defined in a job from the Continuous Testing Platform (CTP).
   
 ## Documentation
-You can find detailed documentation on how to create service virtualization environments by installing the Parasoft Service Virtualization artifact in Azure and opening a browser to the host name / ip address to see the online user guide.
+You can find detailed documentation on how to create service virtualization environments by installing the Parasoft Service Virtualization artifact in Azure and opening a browser to the host name / ip address to see the online user guide. For specific documentation on this extension, please see Parasoft [Continuous Testing Extension for Azure DevOps](https://docs.parasoft.com/display/SVC20202/Continuous+Testing+Extension+for+Azure+DevOps).

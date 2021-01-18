@@ -1,6 +1,6 @@
 {
   "name": "ctp-azure-devops-destroy",
-  "version": "1.9.8",
+  "version": "2.0.0",
   "description": "Destroy service virtualization environments with Parasoft Continuous Testing Platform (CTP)",
   "main": "destroy.js",
   "scripts": {

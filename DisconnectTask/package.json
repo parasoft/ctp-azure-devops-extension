@@ -1,6 +1,6 @@
 {
   "name": "ctp-azure-devops-disconnect",
-  "version": "1.9.8",
+  "version": "2.0.0",
   "description": "Disconnect a Parasoft Virtualize Server from Parasoft Continuous Testing Platform (CTP)",
   "main": "disconnect.js",
   "scripts": {
