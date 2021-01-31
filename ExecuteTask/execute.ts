@@ -162,7 +162,7 @@ function uploadFile<T>(reportId: number) {
         var dataCollectorURL = url.parse(response.services.dataCollectorV2);
         var form = new FormData()
         var protocol : 'https:' | 'http:' = dataCollectorURL.protocol === 'https:' ? 'https:' : 'http:';
-        form.append('file', fs.createReadStream(`/target/parasoft/soatest/${reportId}/report.xml`));
+        form.append('file', fs.createReadStream(`target/parasoft/soatest/${reportId}/report.xml`));
         var options : FormData.SubmitOptions = {
             host: dataCollectorURL.hostname,
             port: parseInt(dataCollectorURL.port),
@@ -249,17 +249,17 @@ function publishReport(reportId : number, index: number, environmentName? : stri
             fileData = injectMetaData(fileData, index, appendEnvironmentSet ? environmentName : null);
             firstCallback = false;
         }
-        if (!fs.existsSync(`/target/parasoft/soatest/${reportId}`)) {
-            fs.mkdirSync(`/target/parasoft/soatest/${reportId}`, {recursive: true});
+        if (!fs.existsSync(`target/parasoft/soatest/${reportId}`)) {
+            fs.mkdirSync(`target/parasoft/soatest/${reportId}`, {recursive: true});
         }
         try {
-            fs.appendFileSync(`/target/parasoft/soatest/${reportId}/report.xml`, fileData);
+            fs.appendFileSync(`target/parasoft/soatest/${reportId}/report.xml`, fileData);
         } catch (error) {
             tl.error('Error writing report.xml: ' + error.message);
         }
         return '';
     }).then(() => {
-        console.log('    Saved XML report: ' + "/target/parasoft/soatest/" + reportId + "/report.xml");
+        console.log('    Saved XML report: ' + "target/parasoft/soatest/" + reportId + "/report.xml");
         console.log("    View HTML report: " + ctpService.getBaseURL() + "/testreport/" + reportId + "/report.html");
         uploadFile(reportId).then(response => {
             console.log('   report.xml file upload successful: ' + response);
