@@ -156,13 +156,13 @@ if (dtpEndpoint && publish) {
 var abortOnTimout = tl.getBoolInput('AbortOnTimeout', false);
 var timeout = tl.getInput('TimeoutInMinutes', false);
 
-function uploadFile<T>() {
+function uploadFile<T>(reportId: number) {
     var def = q.defer<T>();
     dtpService.performGET('/api/v1.6/services').then((response: any) => {
         var dataCollectorURL = url.parse(response.services.dataCollectorV2);
         var form = new FormData()
         var protocol : 'https:' | 'http:' = dataCollectorURL.protocol === 'https:' ? 'https:' : 'http:';
-        form.append('file', fs.createReadStream('report.xml'));
+        form.append('file', fs.createReadStream(`/target/parasoft/soatest/${reportId}/report.xml`));
         var options : FormData.SubmitOptions = {
             host: dataCollectorURL.hostname,
             port: parseInt(dataCollectorURL.port),
@@ -248,19 +248,21 @@ function publishReport(reportId : number, index: number, environmentName? : stri
         if (firstCallback) {
             fileData = injectMetaData(fileData, index, appendEnvironmentSet ? environmentName : null);
             firstCallback = false;
-        } 
-        fs.appendFile('report.xml', fileData, (error) => {
-            if (error) {
-                tl.error('Error writing report.xml: ' + error.message)
-                throw error;
-            }
-        });    
+        }
+        if (!fs.existsSync(`/target/parasoft/soatest/${reportId}`)) {
+            fs.mkdirSync(`/target/parasoft/soatest/${reportId}`, {recursive: true});
+        }
+        try {
+            fs.appendFileSync(`/target/parasoft/soatest/${reportId}/report.xml`, fileData);
+        } catch (error) {
+            tl.error('Error writing report.xml: ' + error.message);
+        }
         return '';
     }).then(() => {
-        console.log("    View Report: " + ctpService.getBaseURL() + "/testreport/" + reportId + "/report.html");
-        uploadFile().then(response => {
+        console.log('    Saved XML report: ' + "/target/parasoft/soatest/" + reportId + "/report.xml");
+        console.log("    View HTML report: " + ctpService.getBaseURL() + "/testreport/" + reportId + "/report.html");
+        uploadFile(reportId).then(response => {
             console.log('   report.xml file upload successful: ' + response);
-            console.log('   View Result in DTP: ' + dtpService.getBaseURL() + '/dtp/explorers/test?buildId=' + dtpBuildId);
         }).catch((error) => {
             tl.error('Error while uploading report.xml file: ' + error);
         });
@@ -312,11 +314,12 @@ ctpService.performGET('/api/v2/jobs', (res, def, responseStr) => {
                 if (dtpService) {
                     var environmentNames = extractEnvironmentNames(job);
                     res.reportIds.forEach((reportId, index) => {
-                        console.log('    report location: ' + "/testreport/" + reportId + "/report.xml");
                         publishReport(reportId, index, environmentNames.length > 0 ? environmentNames.shift() : null).catch(err => {
                             tl.error("Failed to publish report to DTP");
+                            throw err;
                         });
                     });
+                    console.log('   View results in DTP: ' + dtpService.getBaseURL() + '/dtp/explorers/test?buildId=' + dtpBuildId);
                 } 
                 tl.setResult(tl.TaskResult.Succeeded, 'Job ' + tl.getInput('Job', true) + ' passed.');
             } else if (status === 'CANCELED') {
@@ -326,12 +329,13 @@ ctpService.performGET('/api/v2/jobs', (res, def, responseStr) => {
                 tl.error('Job ' + tl.getInput('Job', true) + ' failed.');
                 if (dtpService) {
                     res.reportIds.forEach((reportId, index) => {
-                        console.log('    report location: ' + "/testreport/" + reportId + "/report.xml");
                         var environmentNames = extractEnvironmentNames(job);
                         publishReport(reportId, index, environmentNames.length > 0 ? environmentNames.shift() : null).catch(err => {
                             tl.error("Failed to publish report to DTP");
+                            throw err;
                         });
                     });
+                    console.log('   View results in DTP: ' + dtpService.getBaseURL() + '/dtp/explorers/test?buildId=' + dtpBuildId);
                 }
                 tl.setResult(tl.TaskResult.Failed, 'Job ' + tl.getInput('Job', true) + ' failed.');
             }
