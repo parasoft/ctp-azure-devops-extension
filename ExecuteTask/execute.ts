@@ -272,8 +272,10 @@ function publishReport(reportId : number, index: number, environmentName? : stri
         console.log("    View HTML report: " + ctpService.getBaseURL() + "/testreport/" + reportId + "/report.html");
         uploadFile(reportId).then(response => {
             console.log('   report.xml file upload successful: ' + response);
+            def.resolve();
         }).catch((error) => {
             tl.error('Error while uploading report.xml file: ' + error);
+            def.reject(error);
         });
     });
     return def.promise;
@@ -325,7 +327,6 @@ ctpService.performGET('/api/v2/jobs', (res, def, responseStr) => {
                     res.reportIds.forEach((reportId, index) => {
                         publishReport(reportId, index, environmentNames.length > 0 ? environmentNames.shift() : null).catch(err => {
                             tl.error("Failed to publish report to DTP");
-                            throw err;
                         }).then(() => {
                             if (index === 0) {
                                 console.log('   View results in DTP: ' + dtpService.getBaseURL() + '/dtp/explorers/test?buildId=' + dtpBuildId);
@@ -344,7 +345,6 @@ ctpService.performGET('/api/v2/jobs', (res, def, responseStr) => {
                         var environmentNames = extractEnvironmentNames(job);
                         publishReport(reportId, index, environmentNames.length > 0 ? environmentNames.shift() : null).catch(err => {
                             tl.error("Failed to publish report to DTP");
-                            throw err;
                         }).then(() => {
                             if (index === 0) {
                                 console.log('   View results in DTP: ' + dtpService.getBaseURL() + '/dtp/explorers/test?buildId=' + dtpBuildId);
