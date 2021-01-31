@@ -14,7 +14,7 @@
   "version": {
     "Major": "2",
     "Minor": "0",
-    "Patch": "2"
+    "Patch": "3"
   },
   "minimumAgentVersion": "1.103.0",
   "instanceNameFormat": "Disconnect a Virtualize server",

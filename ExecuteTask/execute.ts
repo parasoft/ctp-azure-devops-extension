@@ -249,8 +249,17 @@ function publishReport(reportId : number, index: number, environmentName? : stri
             fileData = injectMetaData(fileData, index, appendEnvironmentSet ? environmentName : null);
             firstCallback = false;
         }
+        if (!fs.existsSync('target')) {
+            fs.mkdirSync('target');
+        }
+        if (!fs.existsSync('target/parasoft')) {
+            fs.mkdirSync('target/parasoft');
+        }
+        if (!fs.existsSync('target/parasoft/soatest')) {
+            fs.mkdirSync('target/parasoft/soatest');
+        }
         if (!fs.existsSync(`target/parasoft/soatest/${reportId}`)) {
-            fs.mkdirSync(`target/parasoft/soatest/${reportId}`, {recursive: true});
+            fs.mkdirSync(`target/parasoft/soatest/${reportId}`);
         }
         try {
             fs.appendFileSync(`target/parasoft/soatest/${reportId}/report.xml`, fileData);
@@ -317,9 +326,12 @@ ctpService.performGET('/api/v2/jobs', (res, def, responseStr) => {
                         publishReport(reportId, index, environmentNames.length > 0 ? environmentNames.shift() : null).catch(err => {
                             tl.error("Failed to publish report to DTP");
                             throw err;
+                        }).then(() => {
+                            if (index === 0) {
+                                console.log('   View results in DTP: ' + dtpService.getBaseURL() + '/dtp/explorers/test?buildId=' + dtpBuildId);
+                            }
                         });
                     });
-                    console.log('   View results in DTP: ' + dtpService.getBaseURL() + '/dtp/explorers/test?buildId=' + dtpBuildId);
                 } 
                 tl.setResult(tl.TaskResult.Succeeded, 'Job ' + tl.getInput('Job', true) + ' passed.');
             } else if (status === 'CANCELED') {
@@ -333,6 +345,10 @@ ctpService.performGET('/api/v2/jobs', (res, def, responseStr) => {
                         publishReport(reportId, index, environmentNames.length > 0 ? environmentNames.shift() : null).catch(err => {
                             tl.error("Failed to publish report to DTP");
                             throw err;
+                        }).then(() => {
+                            if (index === 0) {
+                                console.log('   View results in DTP: ' + dtpService.getBaseURL() + '/dtp/explorers/test?buildId=' + dtpBuildId);
+                            }
                         });
                     });
                     console.log('   View results in DTP: ' + dtpService.getBaseURL() + '/dtp/explorers/test?buildId=' + dtpBuildId);
