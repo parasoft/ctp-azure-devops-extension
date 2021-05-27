@@ -198,13 +198,12 @@ instancesPromise.then((instance: EMEnvironmentInstance) => {
             if (status === 'running' || status === 'waiting') {
                 setTimeout(checkStatus, 1000);
             } else if (status === 'success') {
-                tl.debug('Successfully provisioned ' + tl.getInput('Instance', true));
+                console.log('Successfully provisioned ' + tl.getInput('Instance', true));
                 tl.setResult(tl.TaskResult.Succeeded, 'Successfully provisioned ' + tl.getInput('Instance', true));
             } else if (status === 'canceled') {
                 tl.warning('Provisioning canceled.');
                 tl.setResult(tl.TaskResult.Succeeded, 'Provisioning canceled.');
             } else {
-                tl.error('Provisioning failed with status:  ' + status);
                 tl.setResult(tl.TaskResult.Failed, 'Provisioning failed with status:  ' + status);
             }
         });

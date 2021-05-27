@@ -319,10 +319,9 @@ ctpService.performGET('/api/v2/jobs', (res, def, responseStr) => {
                 tl.setResult(tl.TaskResult.Succeeded, 'Job ' + tl.getInput('Job', true) + ' canceled.');
             } else {
                 if (status === 'PASSED') {
-                    tl.debug('Job ' + tl.getInput('Job', true) + ' passed.');
+                    console.log('Job ' + tl.getInput('Job', true) + ' passed.');
                     tl.setResult(tl.TaskResult.Succeeded, 'Job ' + tl.getInput('Job', true) + ' passed.');
 		} else {
-                    tl.error('Job ' + tl.getInput('Job', true) + ' failed.');
                     tl.setResult(tl.TaskResult.Failed, 'Job ' + tl.getInput('Job', true) + ' failed.');
 		}
                 res.reportIds.forEach((reportId, index) => {

@@ -116,10 +116,9 @@ findServerInEM<EMSystem>('/api/v2/servers', 'servers', serverValue).then((server
     return deleteFromEM<VirtServer>('/api/v2/servers/' + server.id);
 }).then((res: VirtServer) => {
     if (res.name) {
-        tl.debug('Successfully disconnected server ' + res.name);
+        console.log('Successfully disconnected server ' + res.name);
         tl.setResult(tl.TaskResult.Succeeded, 'Successfully disconnected server ' + res.name);
     } else {
-        tl.debug('Error deleting server');
         tl.setResult(tl.TaskResult.Failed, 'Error deleting server');
     }
 }).catch((e) => {

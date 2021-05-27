@@ -180,10 +180,9 @@ findInEM<EMEnvironment>('/api/v2/environments', 'environments', environmentName,
     return deleteFromEM<EMEnvironment>('/api/v2/environments/' + environmentId + '?recursive=true');
 }).then((res: EMEnvironment) => {
     if (res.name) {
-        tl.debug('Successfully deleted ' + res.name);
+        console.log('Successfully deleted ' + res.name);
         tl.setResult(tl.TaskResult.Succeeded, 'Successfully deleted ' + res.name);
     } else {
-        tl.debug('Error deleting environment');
         tl.setResult(tl.TaskResult.Failed, 'Error deleting environment');
     }
 }).catch((e) => {
