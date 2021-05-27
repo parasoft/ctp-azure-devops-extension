@@ -40,7 +40,7 @@ var deleteFromEM = function<T>(path: string) : q.Promise<T>{
     if (emAuthorization && emAuthorization.parameters['username']) {
         options.auth = emAuthorization.parameters['username'] + ':' +  emAuthorization.parameters['password'];
     }
-    console.log('DELETE ' + protocolLabel + '//' + options.host + ':' + options.port + options.path);
+    tl.debug('DELETE ' + protocolLabel + '//' + options.host + ':' + options.port + options.path);
     var responseString = "";
     protocol.get(options, (res) => {
         res.setEncoding('utf8');
@@ -48,7 +48,7 @@ var deleteFromEM = function<T>(path: string) : q.Promise<T>{
             responseString += chunk;
         });
         res.on('end', () => {
-            console.log('    response ' + res.statusCode + ':  ' + responseString);
+            tl.debug('    response ' + res.statusCode + ':  ' + responseString);
             var responseObject = JSON.parse(responseString);
             def.resolve(responseObject);
         });
@@ -76,7 +76,7 @@ var findServerInEM = function<T>(path: string, property: string, name: string) :
     if (emAuthorization && emAuthorization.parameters['username']) {
         options.auth = emAuthorization.parameters['username'] + ':' +  emAuthorization.parameters['password'];
     }
-    console.log('GET ' + protocolLabel + '//' + options.host + ':' + options.port + options.path);
+    tl.debug('GET ' + protocolLabel + '//' + options.host + ':' + options.port + options.path);
     var responseString = "";
     protocol.get(options, (res) => {
         res.setEncoding('utf8');
@@ -84,7 +84,7 @@ var findServerInEM = function<T>(path: string, property: string, name: string) :
             responseString += chunk;
         });
         res.on('end', () => {
-            console.log('    response ' + res.statusCode + ':  ' + responseString);
+            tl.debug('    response ' + res.statusCode + ':  ' + responseString);
             var responseObject = JSON.parse(responseString);
             if (typeof responseObject[property] === 'undefined') {
                 def.reject(property + ' does not exist in response object from ' + path);

@@ -37,7 +37,7 @@ var getFromEM = function<T>(path: string) : q.Promise<T>{
     if (emAuthorization && emAuthorization.parameters['username']) {
         options.auth = emAuthorization.parameters['username'] + ':' +  emAuthorization.parameters['password'];
     }
-    console.log('GET ' + protocolLabel + '//' + options.host + ':' + options.port + options.path);
+    tl.debug('GET ' + protocolLabel + '//' + options.host + ':' + options.port + options.path);
     var responseString = "";
     protocol.get(options, (res) => {
         res.setEncoding('utf8');
@@ -45,7 +45,7 @@ var getFromEM = function<T>(path: string) : q.Promise<T>{
             responseString += chunk;
         });
         res.on('end', () => {
-            console.log('    response ' + res.statusCode + ':  ' + responseString);
+            tl.debug('    response ' + res.statusCode + ':  ' + responseString);
             var responseObject = JSON.parse(responseString);
             def.resolve(responseObject);
         });
@@ -74,14 +74,14 @@ var findInEM = function<T>(path: string, property: string, name: string) :q.Prom
         options.auth = emAuthorization.parameters['username'] + ':' +  emAuthorization.parameters['password'];
     }
     var responseString = "";
-    console.log('GET ' + protocolLabel + '//' + options.host + ':' + options.port + options.path);
+    tl.debug('GET ' + protocolLabel + '//' + options.host + ':' + options.port + options.path);
     protocol.get(options, (res) => {
         res.setEncoding('utf8');
         res.on('data', (chunk) => {
             responseString += chunk;
         });
         res.on('end', () => {
-            console.log('    response ' + res.statusCode + ':  ' + responseString);
+            tl.debug('    response ' + res.statusCode + ':  ' + responseString);
             var responseObject = JSON.parse(responseString);
             if (typeof responseObject[property] === 'undefined') {
                 def.reject(property + ' does not exist in response object from ' + path);
@@ -122,7 +122,7 @@ var postToEM = function<T>(path: string, data: any) : q.Promise<T>{
     if (emAuthorization && emAuthorization.parameters['username']) {
         options.auth = emAuthorization.parameters['username'] + ':' +  emAuthorization.parameters['password'];
     }
-    console.log('POST ' + protocolLabel + '//' + options.host + ':' + options.port + options.path);
+    tl.debug('POST ' + protocolLabel + '//' + options.host + ':' + options.port + options.path);
     var responseString = "";
     var req = protocol.request(options, (res) => {
         res.setEncoding('utf8');
@@ -130,7 +130,7 @@ var postToEM = function<T>(path: string, data: any) : q.Promise<T>{
             responseString += chunk;
         });
         res.on('end', () => {
-            console.log('    response ' + res.statusCode + ':  ' + responseString);
+            tl.debug('    response ' + res.statusCode + ':  ' + responseString);
             var responseObject = JSON.parse(responseString);
             def.resolve(responseObject);
         });
@@ -174,7 +174,7 @@ if (copyToVirtualize === 'true') {
                 "password": tl.getInput('repoPassword', false),
             }
             copyEnv.dataRepoSettings = dataRepoSettings;
-            console.log("Data repo host: " + dataRepoSettings.host);
+            tl.debug("Data repo host: " + dataRepoSettings.host);
         }
         return postToEM<EMEnvironmentCopyResult>('/api/v2/environments/copy?async=false', copyEnv);
     }).then((copyResult: EMEnvironmentCopyResult) => {

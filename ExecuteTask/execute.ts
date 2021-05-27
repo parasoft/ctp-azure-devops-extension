@@ -48,7 +48,7 @@ class WebService {
         if (this.authorization && this.authorization.parameters['username']) {
             options.auth = this.authorization.parameters['username'] + ':' + this.authorization.parameters['password'];
         }
-        console.log('GET ' + this.protocolLabel + '//' + options.host + (options.port ? ':' + options.port : "") + options.path);
+        tl.debug('GET ' + this.protocolLabel + '//' + options.host + (options.port ? ':' + options.port : "") + options.path);
         var responseString = "";
         this.protocol.get(options, (res) => {
             res.setEncoding('utf8');
@@ -65,12 +65,12 @@ class WebService {
                     if (redirectPath.startsWith(this.baseURL.path)) {
                         redirectPath = redirectPath.substring(3);
                     }
-                    console.log('    redirect to "' + redirectPath + '"')
+                    tl.debug('    redirect to "' + redirectPath + '"')
                     this.performGET<T>(redirectPath, handler, dataHandler).then(response => def.resolve(response));
                 } else if (handler) {
                     handler(res, def, responseString);
                 } else {
-                    console.log('    response ' + res.statusCode + ':  ' + responseString);
+                    tl.debug('    response ' + res.statusCode + ':  ' + responseString);
                     var responseObject = JSON.parse(responseString);
                     def.resolve(responseObject);
                 }
@@ -116,7 +116,7 @@ class WebService {
         if (this.authorization && this.authorization.parameters['username']) {
             options.auth = this.authorization.parameters['username'] + ':' + this.authorization.parameters['password'];
         }
-        console.log(method + ' ' + this.protocolLabel + '//' + options.host + (options.port ? ':' + options.port : "") + options.path);
+        tl.debug(method + ' ' + this.protocolLabel + '//' + options.host + (options.port ? ':' + options.port : "") + options.path);
         var responseString = "";
         var req = this.protocol.request(options, (res) => {
             res.setEncoding('utf8');
@@ -124,7 +124,7 @@ class WebService {
                 responseString += chunk;
             });
             res.on('end', () => {
-                console.log('    response ' + res.statusCode + ':  ' + responseString);
+                tl.debug('    response ' + res.statusCode + ':  ' + responseString);
                 var responseObject = JSON.parse(responseString);
                 def.resolve(responseObject);
             });
@@ -178,7 +178,7 @@ function uploadFile<T>(reportId: number) {
                 options.auth = dtpAuthorization.parameters['username'] + ':' + dtpAuthorization.parameters['password'];
             }
         }
-        console.log('POST ' + options.protocol + '//' + options.host + (options.port ? ':' + options.port : "") + options.path);
+        tl.debug('POST ' + options.protocol + '//' + options.host + (options.port ? ':' + options.port : "") + options.path);
         form.submit(options, (err, res) => {
             if (err) {
                 return def.reject(new Error(err.message))
@@ -237,7 +237,7 @@ function extractEnvironmentNames(job : EMJob) : string[]{
     return environmentNames;
 }
 
-function publishReport(reportId : number, index: number, environmentName? : string) : q.Promise<void> {
+function downloadReport(reportId : number, index: number, environmentName? : string) : q.Promise<void> {
     var def = q.defer<void>(),
         firstCallback = true;
     ctpService.performGET("/testreport/" + reportId + "/report.xml",  (res, def, responseStr) => { 
@@ -268,15 +268,9 @@ function publishReport(reportId : number, index: number, environmentName? : stri
         }
         return '';
     }).then(() => {
-        console.log('    Saved XML report: ' + "target/parasoft/soatest/" + reportId + "/report.xml");
-        console.log("    View HTML report: " + ctpService.getBaseURL() + "/testreport/" + reportId + "/report.html");
-        uploadFile(reportId).then(response => {
-            console.log('   report.xml file upload successful: ' + response);
-            def.resolve();
-        }).catch((error) => {
-            tl.error('Error while uploading report.xml file: ' + error);
-            def.reject(error);
-        });
+        console.log('   Saved XML report: ' + "target/parasoft/soatest/" + reportId + "/report.xml");
+        console.log("   View report in CTP: " + ctpService.getBaseURL() + "/testreport/" + reportId + "/report.html");
+	def.resolve();
     });
     return def.promise;
 }
@@ -284,7 +278,7 @@ function publishReport(reportId : number, index: number, environmentName? : stri
 var jobName = tl.getInput('Job', true);
 var job : EMJob;
 ctpService.performGET('/api/v2/jobs', (res, def, responseStr) => {
-    console.log('    response ' + res.statusCode + ':  ' + responseStr);
+    tl.debug('    response ' + res.statusCode + ':  ' + responseStr);
     var responseObject = JSON.parse(responseStr);
     if (typeof responseObject['jobs'] === 'undefined') {
         def.reject('jobs' + ' does not exist in response object from /api/v2/jobs');
@@ -320,40 +314,36 @@ ctpService.performGET('/api/v2/jobs', (res, def, responseStr) => {
             }
             if (status === 'RUNNING' || status === 'WAITING') {
                 setTimeout(checkStatus, 1000);
-            } else if (status === 'PASSED') {
-                tl.debug('Job ' + tl.getInput('Job', true) + ' passed.');
-                if (dtpService) {
-                    var environmentNames = extractEnvironmentNames(job);
-                    res.reportIds.forEach((reportId, index) => {
-                        publishReport(reportId, index, environmentNames.length > 0 ? environmentNames.shift() : null).catch(err => {
-                            tl.error("Failed to publish report to DTP");
-                        }).then(() => {
-                            if (index === 0) {
-                                console.log('   View results in DTP: ' + dtpService.getBaseURL() + '/dtp/explorers/test?buildId=' + dtpBuildId);
-                            }
-                        });
-                    });
-                } 
-                tl.setResult(tl.TaskResult.Succeeded, 'Job ' + tl.getInput('Job', true) + ' passed.');
             } else if (status === 'CANCELED') {
                 tl.warning('Job ' + tl.getInput('Job', true) + ' canceled.');
                 tl.setResult(tl.TaskResult.Succeeded, 'Job ' + tl.getInput('Job', true) + ' canceled.');
             } else {
-                tl.error('Job ' + tl.getInput('Job', true) + ' failed.');
-                if (dtpService) {
-                    res.reportIds.forEach((reportId, index) => {
-                        var environmentNames = extractEnvironmentNames(job);
-                        publishReport(reportId, index, environmentNames.length > 0 ? environmentNames.shift() : null).catch(err => {
-                            tl.error("Failed to publish report to DTP");
-                        }).then(() => {
-                            if (index === 0) {
-                                console.log('   View results in DTP: ' + dtpService.getBaseURL() + '/dtp/explorers/test?buildId=' + dtpBuildId);
-                            }
-                        });
+                if (status === 'PASSED') {
+                    tl.debug('Job ' + tl.getInput('Job', true) + ' passed.');
+                    tl.setResult(tl.TaskResult.Succeeded, 'Job ' + tl.getInput('Job', true) + ' passed.');
+		} else {
+                    tl.error('Job ' + tl.getInput('Job', true) + ' failed.');
+                    tl.setResult(tl.TaskResult.Failed, 'Job ' + tl.getInput('Job', true) + ' failed.');
+		}
+                res.reportIds.forEach((reportId, index) => {
+                    var environmentNames = extractEnvironmentNames(job);
+                    let downloadPromise = downloadReport(reportId, index, environmentNames.length > 0 ? environmentNames.shift() : null).catch(err => {
+                        tl.error("Failed to download report from CTP");
                     });
-                    console.log('   View results in DTP: ' + dtpService.getBaseURL() + '/dtp/explorers/test?buildId=' + dtpBuildId);
-                }
-                tl.setResult(tl.TaskResult.Failed, 'Job ' + tl.getInput('Job', true) + ' failed.');
+                    if (dtpService) {
+                        downloadPromise.then(() => {
+                            uploadFile(reportId).then(response => {
+                                tl.debug('   report.xml file upload successful: ' + response);
+                                if (index === 0) {
+                                    console.log('   View results in DTP: ' + dtpService.getBaseURL() + '/dtp/explorers/test?buildId=' + dtpBuildId);
+                                }
+                            }).catch((error) => {
+                                tl.error('Error while uploading report.xml file: ' + error);
+                                tl.error("Failed to publish report to DTP");
+                            });
+                        });
+                    }
+                });
             }
         });
     };
