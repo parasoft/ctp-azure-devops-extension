@@ -32,7 +32,7 @@
       "type": "pickList",
       "label": "System",
       "required": true,
-      "helpMarkDown": "Name of the system",
+      "helpMarkDown": "Name of the system"
     },
     {
       "name": "Environment",

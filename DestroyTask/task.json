@@ -41,7 +41,7 @@
       "defaultValue": "",
       "helpMarkDown": "Name of the environment",
       "required": true
-    },
+    }
   ],
   "dataSourceBindings" : [
     {
